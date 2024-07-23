@@ -51,13 +51,17 @@ const schema = z.object({
   description: z.string().max(500).optional(),
   serviceDate: z.date(),
   cost: z
-    .number()
-    .min(0, "Please enter a valid value")
-    .max(999999999, "Please enter a valid value")
-    .multipleOf(0.01, "Please enter a valid currency value")
+    .string()
     .optional()
-    .or(z.literal(""))
-    .transform((val) => (val === "" ? undefined : String(val))),
+    .refine(
+      (value) => {
+        if (value === undefined || value === "") return true;
+        return /^\d+(\.\d{1,2})?$/.test(value);
+      },
+      {
+        message: "Cost must be a valid decimal number or blank",
+      }
+    ),
 });
 
 interface NewServiceRecordDialogProps {
@@ -217,7 +221,6 @@ export function NewServiceRecordDialog({
                         type="number"
                         placeholder="100.00"
                         {...field}
-                        onChange={(event) => field.onChange(event.target)}
                       />
                     </FormControl>
                     <FormDescription>

@@ -32,7 +32,7 @@ export function OdometerRowActions({ reading }: { reading: OdometerReading }) {
       />
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <Button variant="outline" size="icon" className="w-7 h-7">
+          <Button variant="ghost" size="icon" className="w-8 h-8">
             <EllipsisVertical className="h-4 w-4" />
           </Button>
         </DropdownMenuTrigger>

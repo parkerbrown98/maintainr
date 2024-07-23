@@ -26,6 +26,8 @@ import {
 } from "lucide-react";
 import { useUserVehicle } from "@/lib/hooks/user-vehicle";
 
+const VEHICLE_MATCH_PATTERN = /^\/vehicles(\/[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})?$/;
+
 export default function Sidebar() {
   const vehicle = useUserVehicle();
   const pathname = usePathname();
@@ -66,8 +68,8 @@ export default function Sidebar() {
               className={cn(
                 "flex items-center gap-3 rounded-lg px-3 py-2 transition-all hover:text-primary",
                 {
-                  "text-primary bg-muted": pathname.startsWith("/vehicles"),
-                  "text-muted-foreground": !pathname.startsWith("/vehicles"),
+                  "text-primary bg-muted": VEHICLE_MATCH_PATTERN.test(pathname),
+                  "text-muted-foreground": !VEHICLE_MATCH_PATTERN.test(pathname),
                 }
               )}
             >
@@ -93,12 +95,16 @@ export default function Sidebar() {
             {vehicle && (
               <>
                 <Link
-                  href="/service"
+                  href={`/vehicles/${vehicle.id}/service`}
                   className={cn(
                     "flex items-center gap-3 rounded-lg px-3 py-2 transition-all hover:text-primary",
                     {
-                      "text-primary bg-muted": pathname.startsWith("/service"),
-                      "text-muted-foreground": !pathname.startsWith("/service"),
+                      "text-primary bg-muted": pathname.startsWith(
+                        `/vehicles/${vehicle.id}/service`
+                      ),
+                      "text-muted-foreground": !pathname.startsWith(
+                        `/vehicles/${vehicle.id}/service`
+                      ),
                     }
                   )}
                 >
@@ -106,12 +112,16 @@ export default function Sidebar() {
                   Service
                 </Link>
                 <Link
-                  href="/parts"
+                  href={`/vehicles/${vehicle.id}/parts`}
                   className={cn(
                     "flex items-center gap-3 rounded-lg px-3 py-2 transition-all hover:text-primary",
                     {
-                      "text-primary bg-muted": pathname.startsWith("/parts"),
-                      "text-muted-foreground": !pathname.startsWith("/parts"),
+                      "text-primary bg-muted": pathname.startsWith(
+                        `/vehicles/${vehicle.id}/parts`
+                      ),
+                      "text-muted-foreground": !pathname.startsWith(
+                        `/vehicles/${vehicle.id}/parts`
+                      ),
                     }
                   )}
                 >
@@ -119,14 +129,16 @@ export default function Sidebar() {
                   Parts
                 </Link>
                 <Link
-                  href="/incidents"
+                  href={`/vehicles/${vehicle.id}/incidents`}
                   className={cn(
                     "flex items-center gap-3 rounded-lg px-3 py-2 transition-all hover:text-primary",
                     {
-                      "text-primary bg-muted":
-                        pathname.startsWith("/incidents"),
-                      "text-muted-foreground":
-                        !pathname.startsWith("/incidents"),
+                      "text-primary bg-muted": pathname.startsWith(
+                        `/vehicles/${vehicle.id}/incidents`
+                      ),
+                      "text-muted-foreground": !pathname.startsWith(
+                        `/vehicles/${vehicle.id}/incidents`
+                      ),
                     }
                   )}
                 >
@@ -134,13 +146,16 @@ export default function Sidebar() {
                   Incidents
                 </Link>
                 <Link
-                  href="/odometer"
+                  href={`/vehicles/${vehicle.id}/odometer`}
                   className={cn(
                     "flex items-center gap-3 rounded-lg px-3 py-2 transition-all hover:text-primary",
                     {
-                      "text-primary bg-muted": pathname.startsWith("/odometer"),
-                      "text-muted-foreground":
-                        !pathname.startsWith("/odometer"),
+                      "text-primary bg-muted": pathname.startsWith(
+                        `/vehicles/${vehicle.id}/odometer`
+                      ),
+                      "text-muted-foreground": !pathname.startsWith(
+                        `/vehicles/${vehicle.id}/odometer`
+                      ),
                     }
                   )}
                 >
@@ -148,14 +163,16 @@ export default function Sidebar() {
                   Odometer
                 </Link>
                 <Link
-                  href="/documents"
+                  href={`/vehicles/${vehicle.id}/documents`}
                   className={cn(
                     "flex items-center gap-3 rounded-lg px-3 py-2 transition-all hover:text-primary",
                     {
-                      "text-primary bg-muted":
-                        pathname.startsWith("/documents"),
-                      "text-muted-foreground":
-                        !pathname.startsWith("/documents"),
+                      "text-primary bg-muted": pathname.startsWith(
+                        `/vehicles/${vehicle.id}/documents`
+                      ),
+                      "text-muted-foreground": !pathname.startsWith(
+                        `/vehicles/${vehicle.id}/documents`
+                      ),
                     }
                   )}
                 >
@@ -163,12 +180,16 @@ export default function Sidebar() {
                   Documents
                 </Link>
                 <Link
-                  href="/reports"
+                  href={`/vehicles/${vehicle.id}/reports`}
                   className={cn(
                     "flex items-center gap-3 rounded-lg px-3 py-2 transition-all hover:text-primary",
                     {
-                      "text-primary bg-muted": pathname.startsWith("/reports"),
-                      "text-muted-foreground": !pathname.startsWith("/reports"),
+                      "text-primary bg-muted": pathname.startsWith(
+                        `/vehicles/${vehicle.id}/reports`
+                      ),
+                      "text-muted-foreground": !pathname.startsWith(
+                        `/vehicles/${vehicle.id}/reports`
+                      ),
                     }
                   )}
                 >

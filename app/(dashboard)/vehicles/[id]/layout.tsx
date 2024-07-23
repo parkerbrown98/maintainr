@@ -5,7 +5,7 @@ import {
   BreadcrumbList,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
-import { Button } from "@/components/ui/button";
+import { VehicleDetailActions } from "@/components/vehicle-detail-actions";
 import { VehicleTabs } from "@/components/vehicle-tabs";
 import { odometerReadings, vehicles } from "@/drizzle/schema";
 import { VehicleProvider } from "@/lib/context/vehicle";
@@ -83,16 +83,7 @@ export default async function VehiclesLayout({ params, children }: Props) {
               )}
             </div>
           </div>
-          <div className="flex items-center gap-x-2">
-            <Button variant="outline" className="flex items-center gap-x-2">
-              <Pencil className="h-4 w-4" />
-              Edit
-            </Button>
-            <Button className="flex items-center gap-x-2">
-              <Check className="h-4 w-4" />
-              Set Active
-            </Button>
-          </div>
+          <VehicleDetailActions vehicleId={vehicleId} />
         </div>
         <VehicleTabs id={vehicle.id} />
         {children}

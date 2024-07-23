@@ -60,8 +60,8 @@ export async function OdometerCard({ vehicleId }: OdometerCardProps) {
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead>Date</TableHead>
               <TableHead>Odometer</TableHead>
+              <TableHead>Date</TableHead>
               <TableHead></TableHead>
             </TableRow>
           </TableHeader>
@@ -69,20 +69,20 @@ export async function OdometerCard({ vehicleId }: OdometerCardProps) {
             {readingsWithDelta.map((reading) => (
               <TableRow key={reading.id}>
                 <TableCell>
-                  <div className="font-medium">
-                    {moment(reading.recordedAt).format("MMMM D, YYYY")}
-                  </div>
-                  <div className="hidden text-sm text-muted-foreground md:inline">
-                    {moment(reading.recordedAt).fromNow()}
-                  </div>
-                </TableCell>
-                <TableCell>
-                  <div>{reading.reading} mi</div>
+                  <div className="font-medium">{reading.reading} mi</div>
                   {reading.delta > 0 && (
                     <div className="hidden text-sm text-muted-foreground md:inline">
                       +{reading.delta} mi
                     </div>
                   )}
+                </TableCell>
+                <TableCell>
+                  <div>
+                    {moment(reading.recordedAt).format("MMMM D, YYYY")}
+                  </div>
+                  <div className="hidden text-sm text-muted-foreground md:inline">
+                    {moment(reading.recordedAt).fromNow()}
+                  </div>
                 </TableCell>
                 <TableCell>
                   <OdometerRowActions reading={reading} />

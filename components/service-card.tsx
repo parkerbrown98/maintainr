@@ -19,6 +19,8 @@ import {
 import { ServiceCardActions } from "./service-card-actions";
 import { SERVICE_TYPES } from "@/lib/constants";
 import moment from "moment";
+import { ServiceRowActions } from "./service-row-actions";
+import Link from "next/link";
 
 interface ServiceCardProps extends React.HTMLProps<HTMLDivElement> {
   vehicleId: string;
@@ -53,8 +55,10 @@ export async function ServiceCard({ vehicleId, ...props }: ServiceCardProps) {
             <TableHeader>
               <TableRow>
                 <TableHead>Description</TableHead>
-                <TableHead>Odometer</TableHead>
+                <TableHead className="hidden md:table-cell">Cost</TableHead>
+                <TableHead className="hidden sm:table-cell">Odometer</TableHead>
                 <TableHead>Date</TableHead>
+                <TableHead className="hidden md:table-cell"></TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -65,23 +69,32 @@ export async function ServiceCard({ vehicleId, ...props }: ServiceCardProps) {
                   "MMM D, YYYY"
                 );
                 const fromNow = moment(service.serviceDate).fromNow();
+                const serviceUrl = `/vehicles/${vehicleId}/service/?show=${service.id}`;
 
                 return (
                   <TableRow key={service.id}>
                     <TableCell>
-                      <div className="font-medium">
+                      <Link href={serviceUrl} className="font-medium hover:underline">
                         {SERVICE_TYPES[serviceType]}
-                      </div>
+                      </Link>
                       <div className="hidden text-sm text-muted-foreground md:inline">
                         {service.description}
                       </div>
                     </TableCell>
-                    <TableCell>{service.odometer ? `${service.odometer} miles` : "N/A"}</TableCell>
+                    <TableCell className="hidden md:table-cell">
+                      {service.cost ? `$${service.cost}` : "N/A"}
+                    </TableCell>
+                    <TableCell className="hidden sm:table-cell">
+                      {service.odometer ? `${service.odometer} miles` : "N/A"}
+                    </TableCell>
                     <TableCell>
                       <div>{formattedDate}</div>
                       <div className="hidden text-sm text-muted-foreground md:inline">
                         {fromNow}
                       </div>
+                    </TableCell>
+                    <TableCell className="hidden md:table-cell">
+                      <ServiceRowActions service={service} />
                     </TableCell>
                   </TableRow>
                 );

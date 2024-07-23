@@ -1,4 +1,5 @@
 import { SERVICE_TYPES } from "@/lib/constants";
+import { relations } from "drizzle-orm";
 import {
   integer,
   pgTable,
@@ -16,8 +17,16 @@ export const users = pgTable("users", {
   lastName: varchar("last_name", { length: 100 }).notNull(),
   email: varchar("email", { length: 100 }).notNull(),
   password: varchar("password", { length: 100 }).notNull(),
+  selectedVehicleId: uuid("selected_vehicle_id"),
   createdAt: timestamp("created_at").notNull().defaultNow(),
 });
+
+export const usersRelations = relations(users, ({ one }) => ({
+  selectedVehicle: one(vehicles, {
+    fields: [users.selectedVehicleId],
+    references: [vehicles.id],
+  }),
+}));
 
 export const sessions = pgTable("sessions", {
   id: text("id").primaryKey(),

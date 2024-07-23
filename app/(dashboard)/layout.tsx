@@ -6,6 +6,11 @@ import Navbar from "@/components/navbar";
 import { validateUser } from "@/lib/auth";
 import { redirect } from "next/navigation";
 import { AuthProvider } from "@/lib/context/auth";
+import { db } from "@/lib/db";
+import { vehicles } from "@/drizzle/schema";
+import { and, eq } from "drizzle-orm";
+import { UserVehicleProvider } from "@/lib/context/user-vehicle";
+import { Toaster } from "@/components/ui/sonner";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -24,17 +29,31 @@ export default async function RootLayout({
     return redirect("/login");
   }
 
+  const [selectedVehicle] = await db
+    .select()
+    .from(vehicles)
+    .where(
+      and(
+        eq(vehicles.id, session.user.selectedVehicleId),
+        eq(vehicles.userId, session.user.id)
+      )
+    )
+    .limit(1);
+
   return (
     <html lang="en">
       <body className={inter.className}>
         <AuthProvider user={session.user}>
-          <div className="grid min-h-screen w-full md:grid-cols-[220px_1fr] lg:grid-cols-[280px_1fr]">
-            <Sidebar />
-            <div className="flex flex-col h-full">
-              <Navbar />
-              <main className="p-4 lg:p-6 flex-1">{children}</main>
+          <UserVehicleProvider vehicle={selectedVehicle}>
+            <div className="grid min-h-screen w-full md:grid-cols-[220px_1fr] lg:grid-cols-[280px_1fr]">
+              <Sidebar />
+              <div className="flex flex-col h-full">
+                <Navbar />
+                <main className="p-4 lg:p-6 flex-1">{children}</main>
+                <Toaster />
+              </div>
             </div>
-          </div>
+          </UserVehicleProvider>
         </AuthProvider>
       </body>
     </html>

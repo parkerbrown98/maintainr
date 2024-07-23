@@ -53,8 +53,8 @@ export async function ServiceCard({ vehicleId, ...props }: ServiceCardProps) {
             <TableHeader>
               <TableRow>
                 <TableHead>Description</TableHead>
-                <TableHead>Date</TableHead>
                 <TableHead>Odometer</TableHead>
+                <TableHead>Date</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -76,13 +76,13 @@ export async function ServiceCard({ vehicleId, ...props }: ServiceCardProps) {
                         {service.description}
                       </div>
                     </TableCell>
+                    <TableCell>{service.odometer ? `${service.odometer} miles` : "N/A"}</TableCell>
                     <TableCell>
-                      <div className="font-medium">{formattedDate}</div>
+                      <div>{formattedDate}</div>
                       <div className="hidden text-sm text-muted-foreground md:inline">
                         {fromNow}
                       </div>
                     </TableCell>
-                    <TableCell>{service.odometer} miles</TableCell>
                   </TableRow>
                 );
               })}

@@ -74,7 +74,7 @@ export async function ServiceCard({ vehicleId, ...props }: ServiceCardProps) {
                 return (
                   <TableRow key={service.id}>
                     <TableCell>
-                      <Link href={serviceUrl} className="font-medium hover:underline">
+                      <Link href={serviceUrl} className="block font-medium hover:underline">
                         {SERVICE_TYPES[serviceType]}
                       </Link>
                       <div className="hidden text-sm text-muted-foreground md:inline">

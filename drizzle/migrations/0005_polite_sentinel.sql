@@ -1,0 +1,1 @@
+ALTER TABLE "service_records" ALTER COLUMN "cost" DROP NOT NULL;

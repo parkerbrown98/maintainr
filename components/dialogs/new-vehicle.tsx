@@ -25,6 +25,7 @@ import { createVehicle } from "@/lib/actions/vehicles";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useUser } from "@/lib/hooks/auth";
+import { toast } from "sonner";
 
 const schema = z.object({
   make: z.string().min(1, "Make is required"),
@@ -78,6 +79,7 @@ export default function NewVehicleDialog({ open, setOpen }: NewVehicleDialogProp
       form.reset();
       setOpen(false);
       router.refresh();
+      toast.success(`Your ${values.make} ${values.model} has been added`);
     } catch (err) {
       form.setError("root", { message: "An unknown error occurred" });
     } finally {

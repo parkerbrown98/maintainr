@@ -42,9 +42,9 @@ export async function ServiceCard({ vehicleId, ...props }: ServiceCardProps) {
     <Card className="flex flex-col md:col-span-4 md:row-span-3" {...props}>
       <CardHeader className="flex flex-row items-center justify-between">
         <div className="space-y-1.5">
-          <CardTitle>Service History</CardTitle>
+          <CardTitle>Service Log</CardTitle>
           <CardDescription>
-            A list of all services performed on this vehicle
+            Past and upcoming services on this vehicle
           </CardDescription>
         </div>
         <ServiceCardActions />

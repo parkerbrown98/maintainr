@@ -4,24 +4,28 @@ import { createContext } from "react";
 import { Vehicle } from "@/drizzle/schema";
 
 interface UserVehicleContext {
-  vehicle: Vehicle | null;
+  vehicles: Vehicle[] | null;
+  activeVehicle: Vehicle | null;
 }
 
 export const UserVehicleContext = createContext<UserVehicleContext>({
-  vehicle: null,
+  activeVehicle: null,
+  vehicles: null,
 });
 
 interface UserVehicleProviderProps {
-  vehicle: Vehicle | null;
+  vehicles: Vehicle[] | null;
+  activeVehicle: Vehicle | null;
   children: React.ReactNode;
 }
 
 export function UserVehicleProvider({
-  vehicle,
+  vehicles,
+  activeVehicle,
   children,
 }: UserVehicleProviderProps) {
   return (
-    <UserVehicleContext.Provider value={{ vehicle }}>
+    <UserVehicleContext.Provider value={{ activeVehicle, vehicles }}>
       {children}
     </UserVehicleContext.Provider>
   );

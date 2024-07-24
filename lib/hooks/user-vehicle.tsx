@@ -9,5 +9,5 @@ export function useUserVehicle() {
     throw new Error("useUserVehicle must be used within a UserVehicleProvider");
   }
 
-  return context.vehicle;
+  return { ...context };
 }

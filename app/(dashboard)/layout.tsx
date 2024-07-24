@@ -40,11 +40,19 @@ export default async function RootLayout({
     )
     .limit(1);
 
+  const allVehicles = await db
+    .select()
+    .from(vehicles)
+    .where(eq(vehicles.userId, session.user.id));
+
   return (
     <html lang="en">
       <body className={inter.className}>
         <AuthProvider user={session.user}>
-          <UserVehicleProvider vehicle={selectedVehicle}>
+          <UserVehicleProvider
+            vehicles={allVehicles}
+            activeVehicle={selectedVehicle}
+          >
             <div className="grid min-h-screen w-full md:grid-cols-[220px_1fr] lg:grid-cols-[280px_1fr]">
               <Sidebar />
               <div className="flex flex-col h-full">

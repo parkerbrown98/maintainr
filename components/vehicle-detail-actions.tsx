@@ -6,13 +6,18 @@ import { setActiveVehicle } from "@/lib/actions/vehicles";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { useUserVehicle } from "@/lib/hooks/user-vehicle";
+import EditVehicleDialog from "./dialogs/edit-vehicle";
+import { useState } from "react";
+import { useVehicle } from "@/lib/hooks/vehicle";
 
 interface VehicleDetailActionsProps {
   vehicleId: string;
 }
 
 export function VehicleDetailActions({ vehicleId }: VehicleDetailActionsProps) {
+  const [isEditOpen, setIsEditOpen] = useState(false);
   const { activeVehicle } = useUserVehicle();
+  const vehicle = useVehicle();
   const router = useRouter();
 
   const handleActive = async () => {
@@ -21,10 +26,23 @@ export function VehicleDetailActions({ vehicleId }: VehicleDetailActionsProps) {
     router.refresh();
   };
 
+  if (!vehicle) {
+    return null;
+  }
+
   return (
-    <div className="flex items-center gap-x-2">
+    <>
+      <EditVehicleDialog
+        vehicle={vehicle}
+        open={isEditOpen}
+        setOpen={setIsEditOpen}
+      />
       <div className="flex items-center gap-x-2">
-        <Button variant="outline" className="flex items-center gap-x-2">
+        <Button
+          variant="outline"
+          className="flex items-center gap-x-2"
+          onClick={() => setIsEditOpen(true)}
+        >
           <Pencil className="h-4 w-4" />
           Edit
         </Button>
@@ -41,6 +59,6 @@ export function VehicleDetailActions({ vehicleId }: VehicleDetailActionsProps) {
           {activeVehicle?.id === vehicleId ? "Active" : "Set as active"}
         </Button>
       </div>
-    </div>
+    </>
   );
 }

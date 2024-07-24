@@ -8,7 +8,7 @@ import {
 } from "@/drizzle/schema";
 import { db } from "../db";
 import { validateUser } from "../auth";
-import { eq } from "drizzle-orm";
+import { and, eq } from "drizzle-orm";
 
 export async function createVehicle(
   vehicle: VehicleInsert & { odometer: number }
@@ -25,6 +25,21 @@ export async function createVehicle(
     reading: vehicle.odometer,
     recordedAt: new Date(),
   });
+
+  return null;
+}
+
+export async function editVehicle(
+  vehicleId: string,
+  vehicle: Omit<VehicleInsert, "userId">
+) {
+  const user = await validateUser();
+  if (!user || !user.user) return { error: "User not found" };
+
+  await db
+    .update(vehicles)
+    .set(vehicle)
+    .where(and(eq(vehicles.id, vehicleId), eq(vehicles.userId, user.user.id)));
 
   return null;
 }

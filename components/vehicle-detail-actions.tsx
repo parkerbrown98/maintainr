@@ -1,16 +1,18 @@
 "use client";
 
-import { Check, Pencil } from "lucide-react";
+import { ArrowRightFromLine, Check, Pencil } from "lucide-react";
 import { Button } from "./ui/button";
 import { setActiveVehicle } from "@/lib/actions/vehicles";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
+import { useUserVehicle } from "@/lib/hooks/user-vehicle";
 
 interface VehicleDetailActionsProps {
   vehicleId: string;
 }
 
 export function VehicleDetailActions({ vehicleId }: VehicleDetailActionsProps) {
+  const { activeVehicle } = useUserVehicle();
   const router = useRouter();
 
   const handleActive = async () => {
@@ -26,9 +28,17 @@ export function VehicleDetailActions({ vehicleId }: VehicleDetailActionsProps) {
           <Pencil className="h-4 w-4" />
           Edit
         </Button>
-        <Button className="flex items-center gap-x-2" onClick={handleActive}>
-          <Check className="h-4 w-4" />
-          Set Active
+        <Button
+          className="flex items-center gap-x-2"
+          onClick={handleActive}
+          disabled={activeVehicle?.id === vehicleId}
+        >
+          {activeVehicle?.id === vehicleId ? (
+            <Check className="h-4 w-4" />
+          ) : (
+            <ArrowRightFromLine className="h-4 w-4" />
+          )}
+          {activeVehicle?.id === vehicleId ? "Active" : "Set as active"}
         </Button>
       </div>
     </div>

@@ -25,11 +25,11 @@ import {
   Wrench,
 } from "lucide-react";
 import { useUserVehicle } from "@/lib/hooks/user-vehicle";
-
-const VEHICLE_MATCH_PATTERN = /^\/vehicles(\/[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})?$/;
+import { useVehicle } from "@/lib/hooks/vehicle";
 
 export default function Sidebar() {
-  const vehicle = useUserVehicle();
+  const { activeVehicle } = useUserVehicle();
+  const pageVehicle = useVehicle();
   const pathname = usePathname();
 
   return (
@@ -47,9 +47,6 @@ export default function Sidebar() {
         </div>
         <div className="flex-1">
           <nav className="grid items-start px-2 text-sm font-medium lg:px-4">
-            <span className="block px-3 py-2 text-xs font-semibold text-muted-foreground">
-              Dashboard
-            </span>
             <Link
               href="/"
               className={cn(
@@ -61,15 +58,17 @@ export default function Sidebar() {
               )}
             >
               <Home className="h-4 w-4" />
-              Overview
+              Dashboard
             </Link>
             <Link
               href="/vehicles"
               className={cn(
                 "flex items-center gap-3 rounded-lg px-3 py-2 transition-all hover:text-primary",
                 {
-                  "text-primary bg-muted": VEHICLE_MATCH_PATTERN.test(pathname),
-                  "text-muted-foreground": !VEHICLE_MATCH_PATTERN.test(pathname),
+                  "text-primary bg-muted":
+                    pathname.startsWith("/vehicles") &&
+                    activeVehicle?.id !== pageVehicle?.id,
+                  "text-muted-foreground": pathname !== "/vehicles",
                 }
               )}
             >
@@ -92,18 +91,35 @@ export default function Sidebar() {
             <span className="block px-3 py-2 text-xs font-semibold text-muted-foreground mt-2">
               My Vehicle
             </span>
-            {vehicle && (
+            {activeVehicle && (
               <>
                 <Link
-                  href={`/vehicles/${vehicle.id}/service`}
+                  href={`/vehicles/${activeVehicle.id}`}
+                  className={cn(
+                    "flex items-center gap-3 rounded-lg px-3 py-2 transition-all hover:text-primary",
+                    {
+                      "text-primary bg-muted": pathname.endsWith(
+                        `/vehicles/${activeVehicle.id}`
+                      ),
+                      "text-muted-foreground": !pathname.endsWith(
+                        `/vehicles/${activeVehicle.id}`
+                      ),
+                    }
+                  )}
+                >
+                  <CarFront className="h-4 w-4" />
+                  Overview
+                </Link>
+                <Link
+                  href={`/vehicles/${activeVehicle.id}/service`}
                   className={cn(
                     "flex items-center gap-3 rounded-lg px-3 py-2 transition-all hover:text-primary",
                     {
                       "text-primary bg-muted": pathname.startsWith(
-                        `/vehicles/${vehicle.id}/service`
+                        `/vehicles/${activeVehicle.id}/service`
                       ),
                       "text-muted-foreground": !pathname.startsWith(
-                        `/vehicles/${vehicle.id}/service`
+                        `/vehicles/${activeVehicle.id}/service`
                       ),
                     }
                   )}
@@ -112,15 +128,15 @@ export default function Sidebar() {
                   Service
                 </Link>
                 <Link
-                  href={`/vehicles/${vehicle.id}/parts`}
+                  href={`/vehicles/${activeVehicle.id}/parts`}
                   className={cn(
                     "flex items-center gap-3 rounded-lg px-3 py-2 transition-all hover:text-primary",
                     {
                       "text-primary bg-muted": pathname.startsWith(
-                        `/vehicles/${vehicle.id}/parts`
+                        `/vehicles/${activeVehicle.id}/parts`
                       ),
                       "text-muted-foreground": !pathname.startsWith(
-                        `/vehicles/${vehicle.id}/parts`
+                        `/vehicles/${activeVehicle.id}/parts`
                       ),
                     }
                   )}
@@ -129,15 +145,15 @@ export default function Sidebar() {
                   Parts
                 </Link>
                 <Link
-                  href={`/vehicles/${vehicle.id}/incidents`}
+                  href={`/vehicles/${activeVehicle.id}/incidents`}
                   className={cn(
                     "flex items-center gap-3 rounded-lg px-3 py-2 transition-all hover:text-primary",
                     {
                       "text-primary bg-muted": pathname.startsWith(
-                        `/vehicles/${vehicle.id}/incidents`
+                        `/vehicles/${activeVehicle.id}/incidents`
                       ),
                       "text-muted-foreground": !pathname.startsWith(
-                        `/vehicles/${vehicle.id}/incidents`
+                        `/vehicles/${activeVehicle.id}/incidents`
                       ),
                     }
                   )}
@@ -146,15 +162,15 @@ export default function Sidebar() {
                   Incidents
                 </Link>
                 <Link
-                  href={`/vehicles/${vehicle.id}/odometer`}
+                  href={`/vehicles/${activeVehicle.id}/odometer`}
                   className={cn(
                     "flex items-center gap-3 rounded-lg px-3 py-2 transition-all hover:text-primary",
                     {
                       "text-primary bg-muted": pathname.startsWith(
-                        `/vehicles/${vehicle.id}/odometer`
+                        `/vehicles/${activeVehicle.id}/odometer`
                       ),
                       "text-muted-foreground": !pathname.startsWith(
-                        `/vehicles/${vehicle.id}/odometer`
+                        `/vehicles/${activeVehicle.id}/odometer`
                       ),
                     }
                   )}
@@ -163,38 +179,21 @@ export default function Sidebar() {
                   Odometer
                 </Link>
                 <Link
-                  href={`/vehicles/${vehicle.id}/documents`}
+                  href={`/vehicles/${activeVehicle.id}/documents`}
                   className={cn(
                     "flex items-center gap-3 rounded-lg px-3 py-2 transition-all hover:text-primary",
                     {
                       "text-primary bg-muted": pathname.startsWith(
-                        `/vehicles/${vehicle.id}/documents`
+                        `/vehicles/${activeVehicle.id}/documents`
                       ),
                       "text-muted-foreground": !pathname.startsWith(
-                        `/vehicles/${vehicle.id}/documents`
+                        `/vehicles/${activeVehicle.id}/documents`
                       ),
                     }
                   )}
                 >
                   <Files className="h-4 w-4" />
                   Documents
-                </Link>
-                <Link
-                  href={`/vehicles/${vehicle.id}/reports`}
-                  className={cn(
-                    "flex items-center gap-3 rounded-lg px-3 py-2 transition-all hover:text-primary",
-                    {
-                      "text-primary bg-muted": pathname.startsWith(
-                        `/vehicles/${vehicle.id}/reports`
-                      ),
-                      "text-muted-foreground": !pathname.startsWith(
-                        `/vehicles/${vehicle.id}/reports`
-                      ),
-                    }
-                  )}
-                >
-                  <BarChart3 className="h-4 w-4" />
-                  Reports
                 </Link>
               </>
             )}

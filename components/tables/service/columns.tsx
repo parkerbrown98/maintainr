@@ -2,7 +2,7 @@
 
 import { ColumnDef } from "@tanstack/react-table";
 import type { ServiceRecord } from "@/drizzle/schema";
-import { DataTableHeader } from "@/components/ui/data-table";
+import { DataTableHeader } from "@/components/ui/data-table/data-table-header";
 import moment from "moment";
 import { SERVICE_TYPES } from "@/lib/constants";
 

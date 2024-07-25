@@ -1,6 +1,6 @@
 import { ServiceSheetWrapper } from "@/components/service-sheet-wrapper";
 import { columns } from "@/components/tables/service/columns";
-import { DataTable } from "@/components/ui/data-table";
+import { ServiceDataTable } from "@/components/tables/service/table";
 import { serviceRecords, vehicles } from "@/drizzle/schema";
 import { validateUser } from "@/lib/auth";
 import { db } from "@/lib/db";
@@ -54,7 +54,7 @@ export default async function VehicleMaintenance({
     <>
       <ServiceSheetWrapper service={service ? service[0] : null} />
       <div className="flex flex-col gap-4 lg:gap-6">
-        <DataTable columns={columns} data={allServices} />
+        <ServiceDataTable columns={columns} data={allServices} />
       </div>
     </>
   );

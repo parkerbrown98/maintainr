@@ -20,21 +20,19 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { DataTablePagination } from "./data-table-pagination";
 import { useState } from "react";
-import { Input } from "../input";
-import { DataTableViewOptions } from "./data-table-view-options";
-
-export { DataTableHeader } from "./data-table-header";
-export { DataTablePagination } from "./data-table-pagination";
-export { DataTableViewOptions } from "./data-table-view-options";
+import { DataTablePagination } from "@/components/ui/data-table/data-table-pagination";
+import { DataTableViewOptions } from "@/components/ui/data-table/data-table-view-options";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { PlusCircle } from "lucide-react";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
 }
 
-export function DataTable<TData, TValue>({
+export function ServiceDataTable<TData, TValue>({
   columns,
   data,
 }: DataTableProps<TData, TValue>) {
@@ -59,7 +57,7 @@ export function DataTable<TData, TValue>({
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between">
-        {/* <Input
+        <Input
           placeholder="Filter services..."
           value={
             (table.getColumn("serviceType")?.getFilterValue() as string) ?? ""
@@ -67,9 +65,15 @@ export function DataTable<TData, TValue>({
           onChange={(event) =>
             table.getColumn("serviceType")?.setFilterValue(event.target.value)
           }
-          className="max-w-sm"
-        /> */}
-        <DataTableViewOptions table={table} />
+          className="max-w-xs h-8"
+        />
+        <div className="flex items-center gap-x-2">
+          <DataTableViewOptions table={table} />
+          <Button size="sm" className=" h-8" onClick={() => {}}>
+            <PlusCircle className="mr-2 h-4 w-4" />
+            Add Service
+          </Button>
+        </div>
       </div>
       <div className="rounded-md border">
         <Table>

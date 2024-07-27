@@ -5,7 +5,6 @@ import type { ServiceRecord } from "@/drizzle/schema";
 import { DataTableHeader } from "@/components/ui/data-table/data-table-header";
 import moment from "moment";
 import { SERVICE_TYPES } from "@/lib/constants";
-import Link from "next/link";
 import { useSheet } from "@/lib/hooks/sheet";
 import { useService } from "@/lib/hooks/service";
 
@@ -26,7 +25,10 @@ export const columns: ColumnDef<ServiceRecord>[] = [
       };
 
       return (
-        <div onClick={openSheet} className="font-medium">
+        <div
+          onClick={openSheet}
+          className="font-medium hover:underline cursor-pointer"
+        >
           {SERVICE_TYPES[serviceType]}
         </div>
       );
@@ -42,6 +44,13 @@ export const columns: ColumnDef<ServiceRecord>[] = [
     accessorKey: "cost",
     header: ({ column }) => {
       return <DataTableHeader column={column} title="Cost" />;
+    },
+    cell: ({ getValue }) => {
+      const cost = getValue() as number;
+      return "$" + cost.toLocaleString("en-US", {
+        style: "currency",
+        currency: "USD",
+      });
     },
   },
   {

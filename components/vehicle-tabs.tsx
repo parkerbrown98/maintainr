@@ -27,12 +27,6 @@ export function VehicleTabs({ id }: { id: string }) {
         Parts
       </NavTabItem>
       <NavTabItem
-        href={`/vehicles/${id}/incidents`}
-        active={pathname === `/vehicles/${id}/incidents`}
-      >
-        Incidents
-      </NavTabItem>
-      <NavTabItem
         href={`/vehicles/${id}/documents`}
         active={pathname === `/vehicles/${id}/documents`}
       >

@@ -1,8 +1,10 @@
-import { ServiceSheetWrapper } from "@/components/service-sheet-wrapper";
+import { ViewServiceSheet } from "@/components/sheets/view-service";
 import { columns } from "@/components/tables/service/columns";
 import { ServiceDataTable } from "@/components/tables/service/table";
 import { serviceRecords, vehicles } from "@/drizzle/schema";
 import { validateUser } from "@/lib/auth";
+import { SheetProvider } from "@/lib/context/sheet";
+import { ServiceProvider } from "@/lib/context/service";
 import { db } from "@/lib/db";
 import { and, eq } from "drizzle-orm";
 import { notFound } from "next/navigation";
@@ -51,11 +53,13 @@ export default async function VehicleMaintenance({
   );
 
   return (
-    <>
-      <ServiceSheetWrapper service={service ? service[0] : null} />
-      <div className="flex flex-col gap-4 lg:gap-6">
-        <ServiceDataTable columns={columns} data={allServices} />
-      </div>
-    </>
+    <ServiceProvider service={service ? service[0] : null}>
+      <SheetProvider open={service !== null && service.length > 0}>
+        <ViewServiceSheet />
+        <div className="flex flex-col gap-4 lg:gap-6">
+          <ServiceDataTable columns={columns} data={allServices} />
+        </div>
+      </SheetProvider>
+    </ServiceProvider>
   );
 }

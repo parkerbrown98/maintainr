@@ -1,5 +1,4 @@
 import { odometerReadings, Vehicle } from "@/drizzle/schema";
-import { Button } from "./ui/button";
 import {
   Card,
   CardContent,
@@ -8,11 +7,11 @@ import {
   CardHeader,
   CardTitle,
 } from "./ui/card";
-import Link from "next/link";
 import { coalesce, db } from "@/lib/db";
 import { eq, max, sql } from "drizzle-orm";
 import { UnitFormat } from "./unit-format";
 import { Avatar, AvatarFallback } from "./ui/avatar";
+import { VehicleCardActions } from "./vehicle-card-actions";
 
 interface VehicleCardProps {
   vehicle: Vehicle;
@@ -59,12 +58,7 @@ export default async function VehicleCard({ vehicle }: VehicleCardProps) {
         </div>
       </CardContent>
       <CardFooter className="space-x-2">
-        <Button size="sm" asChild>
-          <Link href={`/vehicles/${vehicle.id}`}>View</Link>
-        </Button>
-        <Button size="sm" variant="outline">
-          Edit
-        </Button>
+        <VehicleCardActions vehicleId={vehicle.id} />
       </CardFooter>
     </Card>
   );

@@ -1,4 +1,3 @@
-import NewVehicleDialog from "@/components/dialogs/new-vehicle";
 import {
   Breadcrumb,
   BreadcrumbList,
@@ -6,15 +5,12 @@ import {
   BreadcrumbLink,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
-import { Button } from "@/components/ui/button";
-import { Dialog, DialogTrigger } from "@/components/ui/dialog";
 import { VehicleActions } from "@/components/vehicle-actions";
 import VehicleCard from "@/components/vehicle-card";
 import { vehicles } from "@/drizzle/schema";
 import { validateUser } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { eq } from "drizzle-orm";
-import { PlusCircle } from "lucide-react";
 import { notFound } from "next/navigation";
 
 export default async function Vehicles() {

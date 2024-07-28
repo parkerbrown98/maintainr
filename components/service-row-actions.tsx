@@ -14,8 +14,10 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import type { ServiceRecord } from "@/drizzle/schema";
 import { DeleteServiceDialog } from "./dialogs/delete-service-record";
+import { EditServiceRecordDialog } from "./dialogs/edit-service-record";
 
 export function ServiceRowActions({ service }: { service: ServiceRecord }) {
+  const [editOpen, setEditOpen] = useState(false);
   const [deleteOpen, setDeleteOpen] = useState(false);
   const router = useRouter();
 
@@ -25,6 +27,11 @@ export function ServiceRowActions({ service }: { service: ServiceRecord }) {
 
   return (
     <>
+      <EditServiceRecordDialog
+        service={service}
+        open={editOpen}
+        setOpen={setEditOpen}
+      />
       <DeleteServiceDialog
         service={service}
         open={deleteOpen}
@@ -40,7 +47,9 @@ export function ServiceRowActions({ service }: { service: ServiceRecord }) {
           <DropdownMenuLabel>Actions</DropdownMenuLabel>
           <DropdownMenuItem onClick={handleView}>View</DropdownMenuItem>
           <DropdownMenuSeparator />
-          <DropdownMenuItem>Edit</DropdownMenuItem>
+          <DropdownMenuItem onClick={() => setEditOpen(true)}>
+            Edit
+          </DropdownMenuItem>
           <DropdownMenuItem onClick={() => setDeleteOpen(true)}>
             Delete
           </DropdownMenuItem>

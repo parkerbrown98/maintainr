@@ -9,10 +9,22 @@ import {
 import { db } from "../db";
 import { validateUser } from "../auth";
 import { and, eq } from "drizzle-orm";
+import convert from "convert";
 
 export async function createVehicle(
   vehicle: VehicleInsert & { odometer: number }
 ) {
+  const user = await validateUser();
+  if (!user || !user.user) return { error: "User not found" };
+
+  if (vehicle.odometer < 0)
+    return { error: "Odometer reading cannot be negative" };
+
+  if (vehicle.year < 1900 || vehicle.year > new Date().getFullYear())
+    return { error: "Invalid year" };
+
+  if (vehicle.userId !== user.user.id) return { error: "Invalid user ID" };
+
   const [createdVehicle] = await db
     .insert(vehicles)
     .values(vehicle)
@@ -22,7 +34,12 @@ export async function createVehicle(
 
   await db.insert(odometerReadings).values({
     vehicleId: createdVehicle.id,
-    reading: vehicle.odometer,
+    reading: Math.round(
+      convert(
+        vehicle.odometer,
+        user.preferences.lengthUnits === "metric" ? "km" : "mi"
+      ).to("mi")
+    ),
     recordedAt: new Date(),
   });
 
@@ -35,6 +52,9 @@ export async function editVehicle(
 ) {
   const user = await validateUser();
   if (!user || !user.user) return { error: "User not found" };
+
+  if (vehicle.year < 1900 || vehicle.year > new Date().getFullYear())
+    return { error: "Invalid year" };
 
   await db
     .update(vehicles)

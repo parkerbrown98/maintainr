@@ -54,6 +54,9 @@ export const userPreferences = pgTable("user_preferences", {
   weightUnits: unitTypeEnum("weight_units").notNull().default("imperial"),
 });
 
+export type UserPreferences = typeof userPreferences.$inferSelect;
+export type UserPreferencesInsert = typeof userPreferences.$inferInsert;
+
 export const vehicles = pgTable("vehicles", {
   id: uuid("id").primaryKey().defaultRandom(),
   userId: uuid("user_id")

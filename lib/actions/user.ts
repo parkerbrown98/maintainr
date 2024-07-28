@@ -1,6 +1,10 @@
 "use server";
 
-import { userPreferences, UserPreferencesInsert, users } from "@/drizzle/schema";
+import {
+  userPreferences,
+  UserPreferencesInsert,
+  users,
+} from "@/drizzle/schema";
 import { db } from "../db";
 import { validateUser } from "../auth";
 import { eq } from "drizzle-orm";
@@ -33,21 +37,27 @@ export async function editEmail(email: string) {
     return { error: "User not found" };
   }
 
+  if (/[^@ \t\r\n]+@[^@ \t\r\n]+\.[^@ \t\r\n]+/.test(email) === false) {
+    return { error: "Invalid email address" };
+  }
+
   await db.update(users).set({ email }).where(eq(users.id, user.user.id));
 
   return null;
 }
 
-export async function editPreferences(preferences: Omit<UserPreferencesInsert, "userId">) {
-    const user = await validateUser();
-    if (!user || !user.user) {
-        return { error: "User not found" };
-    }
-    
-    await db
-        .update(userPreferences)
-        .set(preferences)
-        .where(eq(userPreferences.userId, user.user.id));
-    
-    return null;
+export async function editPreferences(
+  preferences: Omit<UserPreferencesInsert, "userId">
+) {
+  const user = await validateUser();
+  if (!user || !user.user) {
+    return { error: "User not found" };
+  }
+
+  await db
+    .update(userPreferences)
+    .set(preferences)
+    .where(eq(userPreferences.userId, user.user.id));
+
+  return null;
 }

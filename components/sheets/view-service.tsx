@@ -17,6 +17,7 @@ import { Separator } from "../ui/separator";
 import moment from "moment";
 import { Avatar, AvatarFallback } from "../ui/avatar";
 import { useVehicle } from "@/lib/hooks/vehicle";
+import { UnitFormat } from "../unit-format";
 
 export function ViewServiceSheet() {
   const { open, setOpen } = useSheet();
@@ -46,12 +47,18 @@ export function ViewServiceSheet() {
                   </AvatarFallback>
                 </Avatar>
                 <div>
-                  <div className="text-sm font-medium leading-tight">{vehicle.year} {vehicle.make}</div>
-                  <div className="text-sm text-muted-foreground">{vehicle.model}</div>
+                  <div className="text-sm font-medium leading-tight">
+                    {vehicle.year} {vehicle.make}
+                  </div>
+                  <div className="text-sm text-muted-foreground">
+                    {vehicle.model}
+                  </div>
                 </div>
               </div>
               <div>
-                <Button variant="outline" size="sm">View Vehicle</Button>
+                <Button variant="outline" size="sm">
+                  View Vehicle
+                </Button>
               </div>
             </div>
             <div className="space-y-2">
@@ -83,7 +90,13 @@ export function ViewServiceSheet() {
                 <div className="text-muted-foreground font-medium">
                   Odometer
                 </div>
-                <div>{service.odometer ? service.odometer + " mi" : "N/A"}</div>
+                <div>
+                  {service.odometer ? (
+                    <UnitFormat value={service.odometer} unit="length" />
+                  ) : (
+                    "N/A"
+                  )}
+                </div>
               </div>
             </div>
             <div className="space-y-2">

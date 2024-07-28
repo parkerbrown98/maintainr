@@ -1,6 +1,6 @@
 "use client";
 
-import { OdometerReading } from "@/drizzle/schema";
+import { ServiceRecord } from "@/drizzle/schema";
 import {
   Dialog,
   DialogContent,
@@ -12,28 +12,29 @@ import {
 import { Button } from "../ui/button";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { deleteOdometerReading } from "@/lib/actions/odometer";
 import { toast } from "sonner";
+import { deleteServiceRecord } from "@/lib/actions/services";
 
-interface DeleteReadingDialogProps {
+interface DeleteServiceDialogProps {
   open: boolean;
   setOpen: (open: boolean) => void;
-  reading: OdometerReading;
+  service: ServiceRecord;
 }
 
-export function DeleteReadingDialog({
+export function DeleteServiceDialog({
   open,
   setOpen,
-  reading,
-}: DeleteReadingDialogProps) {
+  service,
+}: DeleteServiceDialogProps) {
   const [loading, setLoading] = useState(false);
   const router = useRouter();
 
   const handleDelete = async () => {
     try {
       setLoading(true);
-      await deleteOdometerReading({ id: reading.id });
+      await deleteServiceRecord(service.id);
       setOpen(false);
+      toast.success("Service record deleted");
       router.refresh();
     } catch (err) {
       if (err instanceof Error) {
@@ -48,9 +49,9 @@ export function DeleteReadingDialog({
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Delete odometer reading</DialogTitle>
+          <DialogTitle>Delete service record</DialogTitle>
           <DialogDescription>
-            Are you sure you want to delete this odometer reading?
+            Are you sure you want to delete this service record?
           </DialogDescription>
         </DialogHeader>
         <DialogFooter>

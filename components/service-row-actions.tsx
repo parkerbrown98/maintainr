@@ -13,8 +13,10 @@ import { Button } from "./ui/button";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import type { ServiceRecord } from "@/drizzle/schema";
+import { DeleteServiceDialog } from "./dialogs/delete-service-record";
 
 export function ServiceRowActions({ service }: { service: ServiceRecord }) {
+  const [deleteOpen, setDeleteOpen] = useState(false);
   const router = useRouter();
 
   const handleView = () => {
@@ -23,6 +25,11 @@ export function ServiceRowActions({ service }: { service: ServiceRecord }) {
 
   return (
     <>
+      <DeleteServiceDialog
+        service={service}
+        open={deleteOpen}
+        setOpen={setDeleteOpen}
+      />
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button variant="ghost" size="icon" className="w-8 h-8">
@@ -34,7 +41,9 @@ export function ServiceRowActions({ service }: { service: ServiceRecord }) {
           <DropdownMenuItem onClick={handleView}>View</DropdownMenuItem>
           <DropdownMenuSeparator />
           <DropdownMenuItem>Edit</DropdownMenuItem>
-          <DropdownMenuItem>Delete</DropdownMenuItem>
+          <DropdownMenuItem onClick={() => setDeleteOpen(true)}>
+            Delete
+          </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
     </>

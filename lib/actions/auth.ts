@@ -1,6 +1,6 @@
 "use server";
 
-import { UserInsert, users } from "@/drizzle/schema";
+import { UserInsert, userPreferences, users } from "@/drizzle/schema";
 import { lucia, validateUser } from "../auth";
 import { db } from "../db";
 import { eq } from "drizzle-orm";
@@ -43,6 +43,9 @@ export async function signUp(user: UserInsert) {
     .insert(users)
     .values({ ...user, password: hashedPassword })
     .returning();
+
+  // Insert preferences for the user
+  await db.insert(userPreferences).values({ userId: newUser[0].id });
 
   const session = await lucia.createSession(newUser[0].id, {
     email: newUser[0].email,
@@ -87,7 +90,7 @@ export async function logOut() {
   }
 
   await lucia.invalidateSession(session.session!.id);
-  
+
   const blankCookie = lucia.createBlankSessionCookie();
   cookies().set(blankCookie.name, blankCookie.value, blankCookie.attributes);
 }

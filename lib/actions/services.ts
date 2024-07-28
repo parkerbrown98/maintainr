@@ -28,7 +28,7 @@ export async function createServiceRecord(record: ServiceRecordInsert) {
   return null;
 }
 
-export async function updateServiceRecord(
+export async function editServiceRecord(
   id: string,
   record: Partial<ServiceRecord>
 ) {

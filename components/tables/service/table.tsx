@@ -27,7 +27,6 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { PlusCircle } from "lucide-react";
 import { NewServiceRecordDialog } from "@/components/dialogs/new-service-record";
-import { ViewServiceSheet } from "@/components/sheets/view-service";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];

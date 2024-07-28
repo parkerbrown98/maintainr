@@ -44,17 +44,17 @@ export default async function VehicleCard({ vehicle }: VehicleCardProps) {
         <div className="flex items-center justify-between flex-wrap gap-4">
           <div>
             <p className="text-sm text-muted-foreground">Odometer</p>
-            <p className="text-lg font-bold">
+            <p className="text-lg font-semibold">
               <UnitFormat value={odometerReading.reading ?? 0} unit="length" />
             </p>
           </div>
           <div>
             <p className="text-sm text-muted-foreground">Next Service</p>
-            <p className="text-lg font-bold">100,000</p>
+            <p className="text-lg font-semibold">100,000</p>
           </div>
           <div>
             <p className="text-sm text-muted-foreground">Last Service</p>
-            <p className="text-lg font-bold">100,000</p>
+            <p className="text-lg font-semibold">100,000</p>
           </div>
         </div>
       </CardContent>

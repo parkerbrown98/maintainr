@@ -84,7 +84,9 @@ export default function NewVehicleDialog({
       router.refresh();
       toast.success(`Your ${values.make} ${values.model} has been added`);
     } catch (err) {
-      form.setError("root", { message: "An unknown error occurred" });
+      if (err instanceof Error) {
+        toast.error(err.message);
+      }
     } finally {
       setLoading(false);
     }

@@ -38,6 +38,7 @@ import { SERVICE_TYPES } from "@/lib/constants";
 import { DatePicker } from "../date-picker";
 import { Textarea } from "../ui/textarea";
 import { createServiceRecord } from "@/lib/actions/services";
+import { LabelInput } from "../ui/label-input";
 
 const schema = z.object({
   odometer: z
@@ -75,7 +76,7 @@ export function NewServiceRecordDialog({
 }: NewServiceRecordDialogProps) {
   const router = useRouter();
   const vehicle = useVehicle();
-  const user = useUser();
+  const { user, preferences } = useUser();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const form = useForm<z.infer<typeof schema>>({
@@ -190,18 +191,23 @@ export function NewServiceRecordDialog({
                   <FormItem>
                     <FormLabel>Odometer</FormLabel>
                     <FormControl>
-                      <Input
-                        type="number"
-                        placeholder="1234"
-                        {...field}
-                        onChange={(event) =>
-                          field.onChange(
-                            Number.isNaN(event.target.valueAsNumber)
-                              ? event.target.value
-                              : event.target.valueAsNumber
-                          )
-                        }
-                      />
+                      <div className="relative">
+                        <LabelInput
+                          type="number"
+                          placeholder="1234"
+                          label={
+                            preferences?.lengthUnits === "metric" ? "km" : "mi"
+                          }
+                          {...field}
+                          onChange={(event) =>
+                            field.onChange(
+                              Number.isNaN(event.target.valueAsNumber)
+                                ? event.target.value
+                                : event.target.valueAsNumber
+                            )
+                          }
+                        />
+                      </div>
                     </FormControl>
                     <FormDescription>
                       The odometer reading when the service was performed
@@ -217,11 +223,7 @@ export function NewServiceRecordDialog({
                   <FormItem>
                     <FormLabel>Cost</FormLabel>
                     <FormControl>
-                      <Input
-                        type="number"
-                        placeholder="100.00"
-                        {...field}
-                      />
+                      <Input type="number" placeholder="100.00" {...field} />
                     </FormControl>
                     <FormDescription>
                       The cost of the service performed

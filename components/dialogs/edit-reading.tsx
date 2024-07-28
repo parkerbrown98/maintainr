@@ -24,9 +24,11 @@ import {
   FormMessage,
 } from "../ui/form";
 import { FormError } from "../ui/form-error";
-import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 import { editOdometerReading } from "@/lib/actions/odometer";
+import { LabelInput } from "../ui/label-input";
+import { useUser } from "@/lib/hooks/auth";
+import convert from "convert";
 
 const schema = z.object({
   date: z.date(),
@@ -44,6 +46,7 @@ export function EditReadingDialog({
   setOpen,
   reading,
 }: EditReadingDialogProps) {
+  const { preferences } = useUser();
   const router = useRouter();
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
@@ -51,7 +54,11 @@ export function EditReadingDialog({
     resolver: zodResolver(schema),
     defaultValues: {
       date: reading.recordedAt,
-      odometer: reading.reading,
+      odometer: Math.round(
+        convert(reading.reading, "mi").to(
+          preferences?.lengthUnits === "metric" ? "km" : "mi"
+        )
+      ),
     },
   });
 
@@ -118,9 +125,12 @@ export function EditReadingDialog({
                 <FormItem>
                   <FormLabel>Odometer*</FormLabel>
                   <FormControl>
-                    <Input
+                    <LabelInput
                       type="number"
                       placeholder="1234"
+                      label={
+                        preferences?.lengthUnits === "metric" ? "km" : "mi"
+                      }
                       {...field}
                       onChange={(event) =>
                         field.onChange(event.target.valueAsNumber)

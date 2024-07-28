@@ -26,6 +26,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useUser } from "@/lib/hooks/auth";
 import { toast } from "sonner";
+import { LabelInput } from "../ui/label-input";
 
 const schema = z.object({
   make: z.string().min(1, "Make is required"),
@@ -53,7 +54,7 @@ export default function NewVehicleDialog({
   open,
   setOpen,
 }: NewVehicleDialogProps) {
-  const { user } = useUser();
+  const { user, preferences } = useUser();
   const [loading, setLoading] = useState(false);
   const router = useRouter();
   const form = useForm<z.infer<typeof schema>>({
@@ -167,9 +168,12 @@ export default function NewVehicleDialog({
                 <FormItem>
                   <FormLabel>Odometer</FormLabel>
                   <FormControl>
-                    <Input
+                    <LabelInput
                       type="number"
                       placeholder="1234"
+                      label={
+                        preferences?.lengthUnits === "metric" ? "km" : "mi"
+                      }
                       {...field}
                       onChange={(event) =>
                         field.onChange(event.target.valueAsNumber)

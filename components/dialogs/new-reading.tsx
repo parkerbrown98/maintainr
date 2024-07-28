@@ -23,10 +23,11 @@ import {
 } from "../ui/form";
 import { Button } from "../ui/button";
 import { DatePicker } from "../date-picker";
-import { Input } from "../ui/input";
 import { createOdometerReading } from "@/lib/actions/odometer";
 import { FormError } from "../ui/form-error";
 import { useVehicle } from "@/lib/hooks/vehicle";
+import { LabelInput } from "../ui/label-input";
+import { useUser } from "@/lib/hooks/auth";
 
 const schema = z.object({
   date: z.date(),
@@ -40,6 +41,7 @@ interface NewReadingDialogProps {
 
 export function NewReadingDialog({ open, setOpen }: NewReadingDialogProps) {
   const vehicle = useVehicle();
+  const { preferences } = useUser();
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const router = useRouter();
@@ -51,7 +53,7 @@ export function NewReadingDialog({ open, setOpen }: NewReadingDialogProps) {
     if (!vehicle) {
       return;
     }
-    
+
     try {
       setLoading(true);
       await createOdometerReading({
@@ -107,9 +109,12 @@ export function NewReadingDialog({ open, setOpen }: NewReadingDialogProps) {
                 <FormItem>
                   <FormLabel>Odometer*</FormLabel>
                   <FormControl>
-                    <Input
+                    <LabelInput
                       type="number"
                       placeholder="1234"
+                      label={
+                        preferences?.lengthUnits === "metric" ? "km" : "mi"
+                      }
                       {...field}
                       onChange={(event) =>
                         field.onChange(event.target.valueAsNumber)

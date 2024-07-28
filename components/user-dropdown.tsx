@@ -1,6 +1,6 @@
 "use client";
 
-import { ChevronDown, Cog, LogOut } from "lucide-react";
+import { ChevronDown, Cog, LogOut, Moon, Sun } from "lucide-react";
 import { Avatar, AvatarFallback } from "./ui/avatar";
 import { Button } from "./ui/button";
 import {
@@ -16,10 +16,12 @@ import Link from "next/link";
 import { logOut } from "@/lib/actions/auth";
 import { useRouter } from "next/navigation";
 import { useUser } from "@/lib/hooks/auth";
+import { useTheme } from "next-themes";
 
 export function UserDropdown() {
   const router = useRouter();
   const { user } = useUser();
+  const { setTheme, theme } = useTheme();
 
   const handleLogout = async () => {
     await logOut();
@@ -53,6 +55,24 @@ export function UserDropdown() {
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
         <DropdownMenuGroup>
+          {theme === "dark" && (
+            <DropdownMenuItem
+              onClick={() => setTheme("light")}
+              className="flex items-center gap-x-2"
+            >
+              <Sun className="h-4 w-4" />
+              Light mode
+            </DropdownMenuItem>
+          )}
+          {theme === "light" && (
+            <DropdownMenuItem
+              onClick={() => setTheme("dark")}
+              className="flex items-center gap-x-2"
+            >
+              <Moon className="h-4 w-4" />
+              Dark mode
+            </DropdownMenuItem>
+          )}
           <DropdownMenuItem asChild>
             <Link href="/settings" className="flex items-center gap-x-2">
               <Cog className="h-4 w-4" />

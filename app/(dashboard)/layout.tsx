@@ -11,6 +11,7 @@ import { vehicles } from "@/drizzle/schema";
 import { and, eq } from "drizzle-orm";
 import { UserVehicleProvider } from "@/lib/context/user-vehicle";
 import { Toaster } from "@/components/ui/sonner";
+import { ThemeProvider } from "next-themes";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -53,14 +54,21 @@ export default async function RootLayout({
             vehicles={allVehicles}
             activeVehicle={selectedVehicle}
           >
-            <div className="grid min-h-screen w-full md:grid-cols-[220px_1fr] lg:grid-cols-[280px_1fr]">
-              <Sidebar />
-              <div className="flex flex-col h-full">
-                <Navbar />
-                <main className="p-4 lg:p-6 flex-1">{children}</main>
-                <Toaster />
+            <ThemeProvider
+              attribute="class"
+              defaultTheme="system"
+              enableSystem
+              disableTransitionOnChange
+            >
+              <div className="grid min-h-screen w-full md:grid-cols-[220px_1fr] lg:grid-cols-[280px_1fr]">
+                <Sidebar />
+                <div className="flex flex-col h-full">
+                  <Navbar />
+                  <main className="p-4 lg:p-6 flex-1">{children}</main>
+                  <Toaster />
+                </div>
               </div>
-            </div>
+            </ThemeProvider>
           </UserVehicleProvider>
         </AuthProvider>
       </body>

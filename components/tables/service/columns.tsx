@@ -7,6 +7,7 @@ import moment from "moment";
 import { SERVICE_TYPES } from "@/lib/constants";
 import { useSheet } from "@/lib/hooks/sheet";
 import { useService } from "@/lib/hooks/service";
+import { UnitFormat } from "@/components/unit-format";
 
 export const columns: ColumnDef<ServiceRecord>[] = [
   {
@@ -39,6 +40,9 @@ export const columns: ColumnDef<ServiceRecord>[] = [
     header: ({ column }) => {
       return <DataTableHeader column={column} title="Odometer" />;
     },
+    cell: ({ getValue }) => {
+      return <UnitFormat value={getValue() as number} unit="length" />;
+    },
   },
   {
     accessorKey: "cost",
@@ -47,10 +51,13 @@ export const columns: ColumnDef<ServiceRecord>[] = [
     },
     cell: ({ getValue }) => {
       const cost = getValue() as number;
-      return "$" + cost.toLocaleString("en-US", {
-        style: "currency",
-        currency: "USD",
-      });
+      return (
+        "$" +
+        cost.toLocaleString("en-US", {
+          style: "currency",
+          currency: "USD",
+        })
+      );
     },
   },
   {

@@ -1,9 +1,10 @@
 import { Lucia } from "lucia";
 import { DrizzlePostgreSQLAdapter } from "@lucia-auth/adapter-drizzle";
 import { db } from "./db";
-import { users, sessions } from "@/drizzle/schema";
+import { users, sessions, userPreferences } from "@/drizzle/schema";
 import { cache } from "react";
 import { cookies } from "next/headers";
+import { eq } from "drizzle-orm";
 
 const adapter = new DrizzlePostgreSQLAdapter(db, sessions, users);
 
@@ -29,8 +30,24 @@ export const validateUser = cache(async () => {
   const sessionId = cookies().get(lucia.sessionCookieName)?.value ?? null;
   if (!sessionId) return null;
 
+  // Automatically fetches the user from the database
   const result = await lucia.validateSession(sessionId);
-  if (!result || !result.user) return null;
+  if (!result || !result.user || !result.session) return null;
+
+  let [preferences] = await db
+    .select()
+    .from(userPreferences)
+    .where(eq(userPreferences.userId, result.user.id));
+
+  // Create user preferences if they don't exist
+  if (!preferences) {
+    preferences = (
+      await db
+        .insert(userPreferences)
+        .values({ userId: result.user.id })
+        .returning()
+    )[0];
+  }
 
   try {
     if (result.session && result.session.fresh) {
@@ -51,7 +68,7 @@ export const validateUser = cache(async () => {
     }
   } catch {}
 
-  return result;
+  return { user: result.user, session: result.session, preferences };
 });
 
 declare module "lucia" {

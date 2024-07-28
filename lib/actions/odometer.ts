@@ -12,7 +12,6 @@ interface CreateOdometerReading {
   odometer: number;
 }
 
-// TODO: Check ownership of vehicle
 export async function createOdometerReading({
   vehicleId,
   date,
@@ -91,7 +90,6 @@ interface EditOdometerReading {
   odometer: number;
 }
 
-// TODO: Check ownership of vehicle
 export async function editOdometerReading({
   id,
   date,

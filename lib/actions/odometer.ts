@@ -2,8 +2,9 @@
 
 import { odometerReadings, vehicles } from "@/drizzle/schema";
 import { db } from "../db";
-import { eq } from "drizzle-orm";
+import { and, eq } from "drizzle-orm";
 import { validateUser } from "../auth";
+import convert from "convert";
 
 interface CreateOdometerReading {
   vehicleId: string;
@@ -17,10 +18,30 @@ export async function createOdometerReading({
   date,
   odometer,
 }: CreateOdometerReading) {
+  const user = await validateUser();
+  if (!user) {
+    return { error: "User not found" };
+  }
+
+  const [vehicle] = await db
+    .select()
+    .from(vehicles)
+    .where(and(eq(vehicles.id, vehicleId), eq(vehicles.userId, user.user.id)))
+    .limit(1);
+
+  if (!vehicle) {
+    return { error: "Vehicle not found" };
+  }
+
   await db.insert(odometerReadings).values({
     vehicleId,
     recordedAt: date,
-    reading: odometer,
+    reading: Math.round(
+      convert(
+        odometer,
+        user.preferences.lengthUnits === "metric" ? "km" : "mi"
+      ).to("mi")
+    ),
   });
 
   return null;
@@ -40,7 +61,8 @@ export async function deleteOdometerReading({ id }: DeleteOdometerReading) {
   const [reading] = await db
     .select()
     .from(odometerReadings)
-    .where(eq(odometerReadings.id, id));
+    .where(eq(odometerReadings.id, id))
+    .limit(1);
 
   if (!reading) {
     return { error: "Reading not found" };
@@ -49,7 +71,10 @@ export async function deleteOdometerReading({ id }: DeleteOdometerReading) {
   const [vehicle] = await db
     .select()
     .from(vehicles)
-    .where(eq(vehicles.userId, user.user.id));
+    .where(
+      and(eq(vehicles.userId, user.user.id), eq(vehicles.id, reading.vehicleId))
+    )
+    .limit(1);
 
   if (!vehicle || vehicle.id !== reading.vehicleId) {
     return { error: "Vehicle not found" };
@@ -72,11 +97,44 @@ export async function editOdometerReading({
   date,
   odometer,
 }: EditOdometerReading) {
+  const user = await validateUser();
+  if (!user) {
+    return { error: "User not found" };
+  }
+
+  // Ensure the user owns the vehicle
+  const [reading] = await db
+    .select()
+    .from(odometerReadings)
+    .where(eq(odometerReadings.id, id))
+    .limit(1);
+
+  if (!reading) {
+    return { error: "Reading not found" };
+  }
+
+  const [vehicle] = await db
+    .select()
+    .from(vehicles)
+    .where(
+      and(eq(vehicles.userId, user.user.id), eq(vehicles.id, reading.vehicleId))
+    )
+    .limit(1);
+
+  if (!vehicle) {
+    return { error: "Vehicle not found" };
+  }
+
   await db
     .update(odometerReadings)
     .set({
       recordedAt: date,
-      reading: odometer,
+      reading: Math.round(
+        convert(
+          odometer,
+          user.preferences.lengthUnits === "metric" ? "km" : "mi"
+        ).to("mi")
+      ),
     })
     .where(eq(odometerReadings.id, id));
 

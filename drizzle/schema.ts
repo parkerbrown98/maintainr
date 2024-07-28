@@ -26,6 +26,7 @@ export const usersRelations = relations(users, ({ one }) => ({
     fields: [users.selectedVehicleId],
     references: [vehicles.id],
   }),
+  preferences: one(userPreferences),
 }));
 
 export const sessions = pgTable("sessions", {
@@ -39,6 +40,19 @@ export const sessions = pgTable("sessions", {
 
 export type User = typeof users.$inferSelect;
 export type UserInsert = typeof users.$inferInsert;
+
+export const unitTypeEnum = pgEnum("unit_type", ["imperial", "metric"]);
+
+export const userPreferences = pgTable("user_preferences", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  userId: uuid("user_id")
+    .notNull()
+    .references(() => users.id),
+  language: varchar("language", { length: 100 }).notNull().default("en"),
+  lengthUnits: unitTypeEnum("length_units").notNull().default("imperial"),
+  volumeUnits: unitTypeEnum("volume_units").notNull().default("imperial"),
+  weightUnits: unitTypeEnum("weight_units").notNull().default("imperial"),
+});
 
 export const vehicles = pgTable("vehicles", {
   id: uuid("id").primaryKey().defaultRandom(),

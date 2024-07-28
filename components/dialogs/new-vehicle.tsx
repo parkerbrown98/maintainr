@@ -49,8 +49,11 @@ interface NewVehicleDialogProps {
   setOpen: (open: boolean) => void;
 }
 
-export default function NewVehicleDialog({ open, setOpen }: NewVehicleDialogProps) {
-  const user = useUser();
+export default function NewVehicleDialog({
+  open,
+  setOpen,
+}: NewVehicleDialogProps) {
+  const { user } = useUser();
   const [loading, setLoading] = useState(false);
   const router = useRouter();
   const form = useForm<z.infer<typeof schema>>({

@@ -19,6 +19,7 @@ import {
 import moment from "moment";
 import { OdometerCardActions } from "./odometer-card-actions";
 import { OdometerRowActions } from "./odometer-row-actions";
+import { UnitFormat } from "./unit-format";
 
 interface OdometerCardProps {
   vehicleId: string;
@@ -52,7 +53,9 @@ export async function OdometerCard({ vehicleId }: OdometerCardProps) {
       <CardHeader className="flex flex-row items-center justify-between">
         <div className="space-y-1.5">
           <CardTitle>Odometer</CardTitle>
-          <CardDescription>{distanceResult.distance} miles</CardDescription>
+          <CardDescription>
+            <UnitFormat value={distanceResult.distance ?? 0} unit="length" />
+          </CardDescription>
         </div>
         <OdometerCardActions />
       </CardHeader>
@@ -69,17 +72,17 @@ export async function OdometerCard({ vehicleId }: OdometerCardProps) {
             {readingsWithDelta.map((reading) => (
               <TableRow key={reading.id}>
                 <TableCell>
-                  <div className="font-medium">{reading.reading} mi</div>
+                  <div className="font-medium">
+                    <UnitFormat value={reading.reading} unit="length" />
+                  </div>
                   {reading.delta > 0 && (
                     <div className="hidden text-sm text-muted-foreground md:inline">
-                      +{reading.delta} mi
+                      +<UnitFormat value={reading.delta} unit="length" />
                     </div>
                   )}
                 </TableCell>
                 <TableCell>
-                  <div>
-                    {moment(reading.recordedAt).format("MMMM D, YYYY")}
-                  </div>
+                  <div>{moment(reading.recordedAt).format("MMMM D, YYYY")}</div>
                   <div className="hidden text-sm text-muted-foreground md:inline">
                     {moment(reading.recordedAt).fromNow()}
                   </div>

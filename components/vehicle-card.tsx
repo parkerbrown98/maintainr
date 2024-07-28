@@ -36,7 +36,7 @@ export default async function VehicleCard({ vehicle }: VehicleCardProps) {
           <CardTitle>
             {vehicle.year} {vehicle.make} {vehicle.model}
           </CardTitle>
-          <CardDescription>bing bong</CardDescription>
+          {vehicle.vin && <CardDescription>{vehicle.vin}</CardDescription>}
         </div>
       </CardHeader>
       <CardContent>

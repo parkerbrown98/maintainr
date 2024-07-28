@@ -30,7 +30,7 @@ export const validateUser = cache(async () => {
   if (!sessionId) return null;
 
   const result = await lucia.validateSession(sessionId);
-  if (!result) return null;
+  if (!result || !result.user) return null;
 
   try {
     if (result.session && result.session.fresh) {

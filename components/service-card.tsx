@@ -21,6 +21,7 @@ import { SERVICE_TYPES } from "@/lib/constants";
 import moment from "moment";
 import { ServiceRowActions } from "./service-row-actions";
 import Link from "next/link";
+import { UnitFormat } from "./unit-format";
 
 interface ServiceCardProps extends React.HTMLProps<HTMLDivElement> {
   vehicleId: string;
@@ -74,7 +75,10 @@ export async function ServiceCard({ vehicleId, ...props }: ServiceCardProps) {
                 return (
                   <TableRow key={service.id}>
                     <TableCell>
-                      <Link href={serviceUrl} className="block font-medium hover:underline">
+                      <Link
+                        href={serviceUrl}
+                        className="block font-medium hover:underline"
+                      >
                         {SERVICE_TYPES[serviceType]}
                       </Link>
                       <div className="hidden text-sm text-muted-foreground md:inline truncate">
@@ -85,7 +89,11 @@ export async function ServiceCard({ vehicleId, ...props }: ServiceCardProps) {
                       {service.cost ? `$${service.cost}` : "N/A"}
                     </TableCell>
                     <TableCell className="hidden sm:table-cell">
-                      {service.odometer ? `${service.odometer} miles` : "N/A"}
+                      {service.odometer ? (
+                        <UnitFormat value={service.odometer} unit="length" />
+                      ) : (
+                        "N/A"
+                      )}
                     </TableCell>
                     <TableCell>
                       <div>{formattedDate}</div>

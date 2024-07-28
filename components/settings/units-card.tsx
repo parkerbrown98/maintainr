@@ -20,7 +20,6 @@ import {
   FormLabel,
   FormMessage,
 } from "../ui/form";
-import { Input } from "../ui/input";
 import { useUser } from "@/lib/hooks/auth";
 import { toast } from "sonner";
 import { editPreferences, editUserName } from "@/lib/actions/user";

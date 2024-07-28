@@ -7,7 +7,7 @@ import { validateUser } from "@/lib/auth";
 import { redirect } from "next/navigation";
 import { AuthProvider } from "@/lib/context/auth";
 import { db } from "@/lib/db";
-import { vehicles } from "@/drizzle/schema";
+import { userPreferences, vehicles } from "@/drizzle/schema";
 import { and, eq } from "drizzle-orm";
 import { UserVehicleProvider } from "@/lib/context/user-vehicle";
 import { Toaster } from "@/components/ui/sonner";
@@ -45,10 +45,16 @@ export default async function RootLayout({
     .from(vehicles)
     .where(eq(vehicles.userId, session.user.id));
 
+  const [preferences] = await db
+    .select()
+    .from(userPreferences)
+    .where(eq(userPreferences.userId, session.user.id))
+    .limit(1);
+
   return (
     <html lang="en">
       <body className={inter.className}>
-        <AuthProvider user={session.user}>
+        <AuthProvider preferences={preferences} user={session.user}>
           <UserVehicleProvider
             vehicles={allVehicles}
             activeVehicle={selectedVehicle}

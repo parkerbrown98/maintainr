@@ -57,7 +57,7 @@ export default function EditVehicleDialog({
   open,
   setOpen,
 }: EditVehicleDialogProps) {
-  const user = useUser();
+  const { user } = useUser();
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const router = useRouter();

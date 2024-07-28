@@ -19,7 +19,7 @@ import { useUser } from "@/lib/hooks/auth";
 
 export function UserDropdown() {
   const router = useRouter();
-  const user = useUser();
+  const { user } = useUser();
 
   const handleLogout = async () => {
     await logOut();

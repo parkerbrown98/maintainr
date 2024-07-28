@@ -5,6 +5,7 @@ import {
   BreadcrumbList,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
+import { UnitFormat } from "@/components/unit-format";
 import { VehicleDetailActions } from "@/components/vehicle-detail-actions";
 import { VehicleTabs } from "@/components/vehicle-tabs";
 import { odometerReadings, vehicles } from "@/drizzle/schema";
@@ -73,7 +74,7 @@ export default async function VehiclesLayout({ params, children }: Props) {
               )}
               <p className="flex items-center gap-x-1.5 text-sm text-muted-foreground">
                 <Gauge className="h-4 w-4" />
-                {distanceResult.distance} miles
+                <UnitFormat value={distanceResult?.distance ?? 0} unit="length" />
               </p>
               {vehicle.licensePlate && (
                 <p className="flex items-center gap-x-1.5 text-sm text-muted-foreground">

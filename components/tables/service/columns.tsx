@@ -8,6 +8,7 @@ import { SERVICE_TYPES } from "@/lib/constants";
 import { useSheet } from "@/lib/hooks/sheet";
 import { useService } from "@/lib/hooks/service";
 import { UnitFormat } from "@/components/unit-format";
+import { ServiceDataTableRowActions } from "./row-actions";
 
 export const columns: ColumnDef<ServiceRecord>[] = [
   {
@@ -40,8 +41,12 @@ export const columns: ColumnDef<ServiceRecord>[] = [
     header: ({ column }) => {
       return <DataTableHeader column={column} title="Odometer" />;
     },
-    cell: ({ getValue }) => {
-      return <UnitFormat value={getValue() as number} unit="length" />;
+    cell: ({ row }) => {
+      return row.getValue("odometer") ? (
+        <UnitFormat value={row.getValue("odometer")} unit="length" />
+      ) : (
+        "N/A"
+      );
     },
   },
   {
@@ -68,6 +73,12 @@ export const columns: ColumnDef<ServiceRecord>[] = [
     cell: ({ getValue }) => {
       const date = getValue() as string;
       return moment(date).format("MM/DD/YYYY");
+    },
+  },
+  {
+    id: "actions",
+    cell: ({ row }) => {
+      return <ServiceDataTableRowActions service={row.original} />;
     },
   },
 ];

@@ -1,5 +1,5 @@
 import { SERVICE_TYPES } from "@/lib/constants";
-import { relations } from "drizzle-orm";
+import { desc, relations } from "drizzle-orm";
 import {
   integer,
   pgTable,
@@ -106,3 +106,23 @@ export const serviceRecords = pgTable("service_records", {
 
 export type ServiceRecord = typeof serviceRecords.$inferSelect;
 export type ServiceRecordInsert = typeof serviceRecords.$inferInsert;
+
+export const uploads = pgTable("uploads", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  userId: uuid("user_id")
+    .notNull()
+    .references(() => users.id),
+  vehicleId: uuid("vehicle_id").references(() => vehicles.id),
+  serviceRecordId: uuid("service_record_id").references(
+    () => serviceRecords.id
+  ),
+  fileName: varchar("file_name", { length: 100 }).notNull(),
+  mimeType: varchar("mime_type", { length: 100 }).notNull(),
+  url: varchar("url", { length: 100 }).notNull(),
+  size: integer("size").notNull(),
+  description: text("description"),
+  createdAt: timestamp("created_at").notNull().defaultNow(),
+});
+
+export type Upload = typeof uploads.$inferSelect;
+export type UploadInsert = typeof uploads.$inferInsert;

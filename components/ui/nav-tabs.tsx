@@ -21,10 +21,10 @@ export function NavTabItem({
   return (
     <Link
       className={cn(
-        "py-2 px-3 text-sm font-medium rounded-md hover:bg-muted hover:text-black transition-colors",
+        "py-2 px-3 text-sm font-medium rounded-md hover:bg-muted hover:text-primary transition-colors",
         {
           "text-muted-foreground": !active,
-          "bg-muted text-black": active,
+          "bg-muted text-primary": active,
         }
       )}
       href={href}

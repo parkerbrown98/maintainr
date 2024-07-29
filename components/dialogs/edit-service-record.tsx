@@ -24,7 +24,7 @@ import {
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 import { useUser } from "@/lib/hooks/auth";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { FormError } from "../ui/form-error";
 import {
@@ -100,6 +100,22 @@ export function EditServiceRecordDialog({
       cost: service.cost ?? "",
     },
   });
+
+  useEffect(() => {
+    form.reset({
+      odometer: service.odometer
+        ? Math.round(
+            convert(service.odometer, "mi").to(
+              preferences?.lengthUnits === "metric" ? "km" : "mi"
+            )
+          )
+        : 0,
+      serviceType: service.serviceType,
+      description: service.description ?? "",
+      serviceDate: service.serviceDate,
+      cost: service.cost ?? "",
+    });
+  }, [service]);
 
   const onSubmit = async (values: z.infer<typeof schema>) => {
     if (!user || !vehicle) {

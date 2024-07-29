@@ -34,7 +34,7 @@ export function SettingsSidebar() {
       >
         Locale
       </Link>
-      <Link
+      {/* <Link
         href="/settings/integrations"
         className={cn({
           "font-semibold text-primary": pathname.startsWith(
@@ -52,7 +52,7 @@ export function SettingsSidebar() {
         })}
       >
         Advanced
-      </Link>
+      </Link> */}
     </nav>
   );
 }

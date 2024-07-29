@@ -1,6 +1,6 @@
 "use client";
 
-import { EllipsisVertical } from "lucide-react";
+import { Ellipsis } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -40,7 +40,7 @@ export function ServiceRowActions({ service }: { service: ServiceRecord }) {
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button variant="ghost" size="icon" className="w-8 h-8">
-            <EllipsisVertical className="h-4 w-4" />
+            <Ellipsis className="h-4 w-4" />
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">

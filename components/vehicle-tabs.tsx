@@ -27,10 +27,10 @@ export function VehicleTabs({ id }: { id: string }) {
         Parts
       </NavTabItem>
       <NavTabItem
-        href={`/vehicles/${id}/documents`}
-        active={pathname === `/vehicles/${id}/documents`}
+        href={`/vehicles/${id}/uploads`}
+        active={pathname === `/vehicles/${id}/uploads`}
       >
-        Documents
+        Uploads
       </NavTabItem>
     </NavTabs>
   );

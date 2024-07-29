@@ -39,6 +39,8 @@ import { DatePicker } from "../date-picker";
 import { Textarea } from "../ui/textarea";
 import { createServiceRecord } from "@/lib/actions/services";
 import { LabelInput } from "../ui/label-input";
+import convert from "convert";
+import { AudioLines, FileText, FileVideo, Image, X } from "lucide-react";
 
 const schema = z.object({
   odometer: z
@@ -63,6 +65,13 @@ const schema = z.object({
         message: "Cost must be a valid decimal number or blank",
       }
     ),
+  attachments: z
+    .array(
+      z.instanceof(File).refine((val) => val.size < 5 * 1024 * 1024, {
+        message: "File size must be less than 5MB",
+      })
+    )
+    .optional(),
 });
 
 interface NewServiceRecordDialogProps {
@@ -88,12 +97,21 @@ export function NewServiceRecordDialog({
       return;
     }
 
+    const formData = new FormData();
+    formData.set("vehicleId", vehicle.id);
+    formData.set("serviceType", values.serviceType);
+    formData.set("serviceDate", values.serviceDate.toISOString());
+    formData.set("odometer", values.odometer?.toString() || "");
+    formData.set("description", values.description || "");
+    formData.set("cost", values.cost || "");
+
+    values.attachments?.forEach((file) => {
+      formData.append("attachments", file);
+    });
+
     try {
       setLoading(true);
-      await createServiceRecord({
-        vehicleId: vehicle.id,
-        ...values,
-      });
+      await createServiceRecord(formData);
       form.reset();
       setOpen(false);
       router.refresh();
@@ -233,6 +251,76 @@ export function NewServiceRecordDialog({
                 )}
               />
             </div>
+            <FormField
+              control={form.control}
+              name="attachments"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Attach Files</FormLabel>
+                  <FormControl>
+                    <Input
+                      type="file"
+                      onChange={(e) => {
+                        // Add files to the form field
+                        field.onChange([
+                          ...(field.value || []),
+                          ...Array.from(e.target.files || []),
+                        ]);
+                      }}
+                      accept="image/*,application/pdf,audio/*,video/*"
+                      multiple
+                    />
+                  </FormControl>
+                  {field.value && field.value.length > 0 && (
+                    <div className="mt-2 space-y-2">
+                      {field.value.map((file: File, index: number) => (
+                        <div
+                          key={index}
+                          className="flex items-center justify-between gap-x-2"
+                        >
+                          <div className="flex items-center space-x-2">
+                            {file.type.startsWith("image") && (
+                              <Image className="w-5 h-5" />
+                            )}
+                            {file.type === "application/pdf" && (
+                              <FileText className="w-5 h-5" />
+                            )}
+                            {file.type.startsWith("audio") && (
+                              <AudioLines className="w-5 h-5" />
+                            )}
+                            {file.type.startsWith("video") && (
+                              <FileVideo className="w-5 h-5" />
+                            )}
+                            <div className="truncate max-w-[15rem] text-sm">
+                              {file.name}
+                            </div>
+                          </div>
+                          <div className="flex items-center gap-x-4">
+                            <span className="text-muted-foreground text-sm text-right">
+                              {convert(file.size, "bytes")
+                                .to("best")
+                                .toString(0)}
+                            </span>
+                            <Button
+                              onClick={() => {
+                                field.onChange(
+                                  field.value?.filter((_, i) => i !== index)
+                                );
+                              }}
+                              variant="ghost"
+                              className="w-8 h-8 p-0"
+                            >
+                              <X className="w-4 h-4" />
+                            </Button>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
           </form>
         </Form>
         <DialogFooter>

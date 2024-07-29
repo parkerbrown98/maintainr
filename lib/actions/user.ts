@@ -8,6 +8,7 @@ import {
 import { db } from "../db";
 import { validateUser } from "../auth";
 import { eq } from "drizzle-orm";
+import argon2 from "argon2";
 
 export async function editUserName(firstName: string, lastName: string) {
   if (!firstName || !lastName) {
@@ -58,6 +59,36 @@ export async function editPreferences(
     .update(userPreferences)
     .set(preferences)
     .where(eq(userPreferences.userId, user.user.id));
+
+  return null;
+}
+
+export async function editPassword(oldPassword: string, newPassword: string) {
+  const user = await validateUser();
+  if (!user || !user.user) {
+    return { error: "User not found" };
+  }
+
+  if (newPassword.length < 8) {
+    return { error: "Password must be at least 8 characters" };
+  }
+
+  const [userRecord] = await db
+    .select()
+    .from(users)
+    .where(eq(users.id, user.user.id))
+    .limit(1);
+
+  if (!userRecord) {
+    return { error: "User not found" };
+  }
+
+  if (!(await argon2.verify(userRecord.password, oldPassword))) {
+    return { error: "Invalid password" };
+  }
+
+  const password = await argon2.hash(newPassword);
+  await db.update(users).set({ password }).where(eq(users.id, user.user.id));
 
   return null;
 }

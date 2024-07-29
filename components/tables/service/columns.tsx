@@ -56,13 +56,13 @@ export const columns: ColumnDef<ServiceRecord>[] = [
     },
     cell: ({ getValue }) => {
       const cost = getValue() as number;
-      return (
+      return cost ? (
         "$" +
         cost.toLocaleString("en-US", {
           style: "currency",
           currency: "USD",
         })
-      );
+      ) : "N/A";
     },
   },
   {

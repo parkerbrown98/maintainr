@@ -61,7 +61,9 @@ export default async function VehicleMaintenance({
 
   return (
     <ServiceProvider
-      service={service ? service[0].service_records : null}
+      service={
+        service && service.length > 0 ? service[0].service_records : null
+      }
       uploads={serviceUploads}
     >
       <SheetProvider open={service !== null && service.length > 0}>

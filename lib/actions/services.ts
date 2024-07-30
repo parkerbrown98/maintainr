@@ -69,9 +69,16 @@ export async function createServiceRecord(form: FormData) {
   if (!service) return { error: "Failed to create service record" };
 
   for (const file of files) {
-    const filePath = await saveFileToDisk(file);
+    let fileName = file.name.replaceAll(" ", "_");
+
+    // Insert a random string to avoid overwriting files with the same name
+    const randomString = Math.random().toString(36).substring(7);
+    fileName = `${randomString}_${fileName}`;
+
+    const filePath = await saveFileToDisk(fileName, file);
+
     await db.insert(uploads).values({
-      fileName: file.name,
+      fileName,
       mimeType: file.type,
       userId: user.user.id,
       size: file.size,

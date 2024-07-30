@@ -17,6 +17,7 @@ import moment from "moment";
 import { Avatar, AvatarFallback } from "../ui/avatar";
 import { useVehicle } from "@/lib/hooks/vehicle";
 import { UnitFormat } from "../unit-format";
+import { UploadTiles } from "../upload-tiles";
 
 export function ViewServiceSheet() {
   const { open, setOpen } = useSheet();
@@ -107,9 +108,7 @@ export function ViewServiceSheet() {
             <div className="space-y-2">
               <div className="font-medium">Uploads</div>
               {uploads && uploads.length > 0 ? (
-                <div className="text-sm text-muted-foreground">
-                  yo
-                </div>
+                <UploadTiles uploads={uploads} />
               ) : (
                 <div className="text-sm text-muted-foreground">
                   No uploads have been attached to this service.

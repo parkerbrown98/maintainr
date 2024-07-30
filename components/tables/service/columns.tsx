@@ -6,9 +6,9 @@ import { DataTableHeader } from "@/components/ui/data-table/data-table-header";
 import moment from "moment";
 import { SERVICE_TYPES } from "@/lib/constants";
 import { useSheet } from "@/lib/hooks/sheet";
-import { useService } from "@/lib/hooks/service";
 import { UnitFormat } from "@/components/unit-format";
 import { ServiceDataTableRowActions } from "./row-actions";
+import { useRouter } from "next/navigation";
 
 export const columns: ColumnDef<ServiceRecord>[] = [
   {
@@ -17,12 +17,12 @@ export const columns: ColumnDef<ServiceRecord>[] = [
       return <DataTableHeader column={column} title="Service" />;
     },
     cell: ({ getValue, row }) => {
+      const router = useRouter();
       const sheet = useSheet();
-      const { setService } = useService();
       const serviceType = getValue() as keyof typeof SERVICE_TYPES;
 
       const openSheet = () => {
-        setService(row.original);
+        router.push(`?show=${row.original.id}`);
         sheet.setOpen(true);
       };
 
@@ -56,13 +56,13 @@ export const columns: ColumnDef<ServiceRecord>[] = [
     },
     cell: ({ getValue }) => {
       const cost = getValue() as number;
-      return cost ? (
-        "$" +
-        cost.toLocaleString("en-US", {
-          style: "currency",
-          currency: "USD",
-        })
-      ) : "N/A";
+      return cost
+        ? "$" +
+            cost.toLocaleString("en-US", {
+              style: "currency",
+              currency: "USD",
+            })
+        : "N/A";
     },
   },
   {

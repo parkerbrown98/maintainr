@@ -1,7 +1,7 @@
 import { ViewServiceSheet } from "@/components/sheets/view-service";
 import { columns } from "@/components/tables/service/columns";
 import { ServiceDataTable } from "@/components/tables/service/table";
-import { serviceRecords, vehicles } from "@/drizzle/schema";
+import { serviceRecords, uploads, vehicles } from "@/drizzle/schema";
 import { validateUser } from "@/lib/auth";
 import { SheetProvider } from "@/lib/context/sheet";
 import { ServiceProvider } from "@/lib/context/service";
@@ -38,8 +38,15 @@ export default async function VehicleMaintenance({
     ? await db
         .select()
         .from(serviceRecords)
-        .where(eq(serviceRecords.id, show))
+        .leftJoin(vehicles, eq(vehicles.id, serviceRecords.vehicleId))
+        .where(
+          and(eq(serviceRecords.id, show), eq(vehicles.userId, user.user.id))
+        )
         .limit(1)
+    : null;
+
+  const serviceUploads = show
+    ? await db.select().from(uploads).where(eq(uploads.serviceRecordId, show))
     : null;
 
   const allServicesWithVehicle = await db
@@ -53,7 +60,10 @@ export default async function VehicleMaintenance({
   );
 
   return (
-    <ServiceProvider service={service ? service[0] : null}>
+    <ServiceProvider
+      service={service ? service[0].service_records : null}
+      uploads={serviceUploads}
+    >
       <SheetProvider open={service !== null && service.length > 0}>
         <ViewServiceSheet />
         <div className="flex flex-col gap-4 lg:gap-6">

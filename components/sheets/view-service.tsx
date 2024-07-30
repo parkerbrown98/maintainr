@@ -1,6 +1,5 @@
 "use client";
 
-import { ServiceRecord } from "@/drizzle/schema";
 import {
   Sheet,
   SheetContent,
@@ -22,7 +21,7 @@ import { UnitFormat } from "../unit-format";
 export function ViewServiceSheet() {
   const { open, setOpen } = useSheet();
   const vehicle = useVehicle();
-  const { service } = useService();
+  const { service, uploads } = useService();
 
   if (!service || !vehicle) {
     return null;
@@ -107,9 +106,15 @@ export function ViewServiceSheet() {
             </div>
             <div className="space-y-2">
               <div className="font-medium">Uploads</div>
-              <div className="text-sm text-muted-foreground">
-                No uploads have been attached to this service.
-              </div>
+              {uploads && uploads.length > 0 ? (
+                <div className="text-sm text-muted-foreground">
+                  yo
+                </div>
+              ) : (
+                <div className="text-sm text-muted-foreground">
+                  No uploads have been attached to this service.
+                </div>
+              )}
             </div>
           </div>
           <SheetFooter>

@@ -299,7 +299,7 @@ export function NewServiceRecordDialog({
                             <span className="text-muted-foreground text-sm text-right">
                               {convert(file.size, "bytes")
                                 .to("best")
-                                .toString(0)}
+                                .toString(2)}
                             </span>
                             <Button
                               onClick={() => {

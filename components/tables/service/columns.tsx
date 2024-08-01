@@ -9,6 +9,7 @@ import { useSheet } from "@/lib/hooks/sheet";
 import { UnitFormat } from "@/components/unit-format";
 import { ServiceDataTableRowActions } from "./row-actions";
 import { useRouter } from "next/navigation";
+import { ServiceRowIndex } from "./row-index";
 
 export const columns: ColumnDef<ServiceRecord>[] = [
   {
@@ -16,25 +17,12 @@ export const columns: ColumnDef<ServiceRecord>[] = [
     header: ({ column }) => {
       return <DataTableHeader column={column} title="Service" />;
     },
-    cell: ({ getValue, row }) => {
-      const router = useRouter();
-      const sheet = useSheet();
-      const serviceType = getValue() as keyof typeof SERVICE_TYPES;
-
-      const openSheet = () => {
-        router.push(`?show=${row.original.id}`);
-        sheet.setOpen(true);
-      };
-
-      return (
-        <div
-          onClick={openSheet}
-          className="font-medium hover:underline cursor-pointer"
-        >
-          {SERVICE_TYPES[serviceType]}
-        </div>
-      );
-    },
+    cell: ({ row }) => (
+      <ServiceRowIndex
+        serviceId={row.original.id}
+        serviceType={row.original.serviceType as keyof typeof SERVICE_TYPES}
+      />
+    ),
   },
   {
     accessorKey: "odometer",

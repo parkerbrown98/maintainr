@@ -95,6 +95,52 @@ export async function createServiceRecord(form: FormData) {
   return null;
 }
 
+export async function addServiceRecordUpload(formData: FormData) {
+  const user = await validateUser();
+  if (!user || !user.user || !user.preferences)
+    return { error: "User not found" };
+
+  if (!formData.has("serviceRecordId") || !formData.has("files"))
+    return { error: "Missing required fields" };
+
+  const serviceRecordId = formData.get("serviceRecordId") as string;
+  const files = formData.getAll("files") as File[];
+
+  const [serviceRecord] = await db
+    .select()
+    .from(serviceRecords)
+    .leftJoin(vehicles, eq(serviceRecords.vehicleId, vehicles.id))
+    .where(
+      and(
+        eq(serviceRecords.id, serviceRecordId),
+        eq(vehicles.userId, user.user.id)
+      )
+    )
+    .limit(1);
+
+  if (!serviceRecord) return { error: "Service record not found" };
+
+  for (const file of files) {
+    let fileName = file.name.replaceAll(" ", "_");
+
+    // Insert a random string to avoid overwriting files with the same name
+    const randomString = Math.random().toString(36).substring(7);
+    fileName = `${randomString}_${fileName}`;
+
+    const filePath = await saveFileToDisk(fileName, file);
+
+    await db.insert(uploads).values({
+      fileName,
+      mimeType: file.type,
+      userId: user.user.id,
+      size: file.size,
+      url: filePath,
+      serviceRecordId,
+      vehicleId: serviceRecord.service_records.vehicleId,
+    });
+  }
+}
+
 export async function editServiceRecord(
   id: string,
   record: Partial<ServiceRecord>
@@ -158,6 +204,7 @@ export async function deleteServiceRecord(id: string) {
       return { error: "Failed to delete file from filesystem" };
     }
 
+    // Should probably do this in one query
     await db.delete(uploads).where(eq(uploads.id, upload.id));
   }
 

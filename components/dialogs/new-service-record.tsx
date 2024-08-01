@@ -103,7 +103,7 @@ export function NewServiceRecordDialog({
     formData.set("serviceDate", values.serviceDate.toISOString());
     formData.set("odometer", values.odometer?.toString() || "");
     formData.set("description", values.description || "");
-    formData.set("cost", values.cost || "");
+    formData.set("cost", values.cost?.toString() || "");
 
     values.attachments?.forEach((file) => {
       formData.append("attachments", file);

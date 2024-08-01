@@ -30,6 +30,7 @@ export async function createServiceRecord(form: FormData) {
   const odometer = form.has("odometer")
     ? parseInt(form.get("odometer") as string)
     : undefined;
+  const cost = form.get("cost") as string;
   const description = form.has("description")
     ? (form.get("description") as string)
     : undefined;
@@ -64,6 +65,7 @@ export async function createServiceRecord(form: FormData) {
             ).to("mi")
           )
         : undefined,
+      cost,
       description,
     })
     .returning();

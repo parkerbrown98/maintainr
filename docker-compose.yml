@@ -1,0 +1,32 @@
+services:
+  next:
+    container_name: maintainr-next-test
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+      - DATABASE_URL=postgres://postgres:password@maintainr-db-test:5432/postgres
+    volumes:
+      - ./next-uploads:/app/uploads
+    ports:
+      - "3000:3000"
+    networks:
+      - maintainr
+    depends_on:
+      - db
+    restart: always
+  db:
+    container_name: maintainr-db-test
+    image: postgres:12.19
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: postgres
+    ports:
+      - "5432:5432"
+    networks:
+      - maintainr
+    restart: always
+networks:
+  maintainr:
+    external: true

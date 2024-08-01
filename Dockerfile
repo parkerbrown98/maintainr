@@ -32,6 +32,8 @@ RUN \
   else npm run build; \
   fi
 
+RUN mkdir -p uploads
+
 # Start Next.js based on the preferred package manager
 CMD \
   if [ -f yarn.lock ]; then yarn start; \

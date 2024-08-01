@@ -6,6 +6,7 @@ services:
       dockerfile: Dockerfile
       args:
       - DATABASE_URL=postgres://postgres:password@maintainr-db:5432/maintainr
+      - HTTPS=false
     volumes:
       - ./next-uploads:/app/uploads
     ports:

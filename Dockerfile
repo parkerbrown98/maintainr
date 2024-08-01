@@ -19,6 +19,8 @@ COPY . .
 # https://github.com/vercel/next.js/discussions/14030
 ARG DATABASE_URL
 ENV DATABASE_URL=${DATABASE_URL}
+ARG HTTPS
+ENV HTTPS=${HTTPS}
 
 # Next.js collects completely anonymous telemetry data about general usage. Learn more here: https://nextjs.org/telemetry
 # Uncomment the following line to disable telemetry at build time

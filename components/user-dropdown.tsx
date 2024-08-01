@@ -72,7 +72,7 @@ export function UserDropdown() {
                 Light mode
               </DropdownMenuItem>
               <DropdownMenuItem
-                onClick={() => setTheme("light")}
+                onClick={() => setTheme("dark")}
                 className="flex items-center gap-x-2"
               >
                 <Moon className="h-4 w-4" />

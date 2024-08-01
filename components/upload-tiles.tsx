@@ -17,7 +17,7 @@ export function UploadTiles({
     <ScrollArea>
       <div
         className={cn(
-          "max-h-[350px] grid grid-cols-2 gap-1.5",
+          "max-h-[350px] flex flex-col space-y-1",
           className
         )}
         {...props}

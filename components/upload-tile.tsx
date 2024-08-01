@@ -2,7 +2,15 @@
 
 import { Upload } from "@/drizzle/schema";
 import { Button } from "./ui/button";
-import { Download, Ellipsis, Trash2, X } from "lucide-react";
+import {
+  AudioLines,
+  Download,
+  Ellipsis,
+  FileText,
+  FileVideo,
+  Trash2,
+  X,
+} from "lucide-react";
 import convert from "convert";
 import Link from "next/link";
 import {
@@ -28,13 +36,30 @@ export function UploadTile({ upload }: UploadTileProps) {
         setOpen={setDeleteDialogOpen}
         upload={upload}
       />
-      <div className="bg-muted border border-border rounded-md overflow-hidden">
-        <img
-          src={upload.url}
-          alt={upload.fileName}
-          className="w-full aspect-[4/3] object-cover"
-        />
-        <div className="flex flex-col space-y-1 border-t border-border p-2">
+      <div className="flex space-x-2 items-center bg-muted border border-border rounded-md p-2">
+        {upload.mimeType.startsWith("image") && (
+          <img
+            src={upload.url}
+            alt={upload.fileName}
+            className="w-10 h-10 aspect-square object-cover rounded-sm"
+          />
+        )}
+        {upload.mimeType === "application/pdf" && (
+          <div className="w-10 h-10 flex items-center justify-center">
+            <FileText className="w-6 h-6" />
+          </div>
+        )}
+        {upload.mimeType.startsWith("audio") && (
+          <div className="w-10 h-10 flex items-center justify-center">
+            <AudioLines className="w-6 h-6" />
+          </div>
+        )}
+        {upload.mimeType.startsWith("video") && (
+          <div className="w-10 h-10 flex items-center justify-center">
+            <FileVideo className="w-6 h-6" />
+          </div>
+        )}
+        <div className="flex items-center justify-between space-x-2 flex-1">
           <Link
             className="group"
             href={upload.url}
@@ -58,7 +83,7 @@ export function UploadTile({ upload }: UploadTileProps) {
                 <Ellipsis className="w-4 h-4" />
               </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent align="start">
+            <DropdownMenuContent align="end">
               <DropdownMenuItem asChild>
                 <Link
                   href={`${upload.url}?download=true`}

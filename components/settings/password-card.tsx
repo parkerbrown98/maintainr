@@ -53,10 +53,6 @@ export function SettingsPasswordCard() {
   const router = useRouter();
   const { user } = useUser();
 
-  if (!user) {
-    return null;
-  }
-
   const form = useForm<FormValues>({
     resolver: zodResolver(schema),
   });
@@ -75,6 +71,10 @@ export function SettingsPasswordCard() {
       }
     }
   };
+
+  if (!user) {
+    return null;
+  }
 
   return (
     <Card>

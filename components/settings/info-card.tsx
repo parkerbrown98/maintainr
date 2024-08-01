@@ -40,15 +40,11 @@ export function SettingsInfoCard() {
   const router = useRouter();
   const { user } = useUser();
 
-  if (!user) {
-    return null;
-  }
-
   const form = useForm<FormValues>({
     resolver: zodResolver(schema),
     defaultValues: {
-      firstName: user.firstName,
-      lastName: user.lastName,
+      firstName: user?.firstName,
+      lastName: user?.lastName,
     },
   });
 
@@ -64,6 +60,10 @@ export function SettingsInfoCard() {
       }
     }
   };
+
+  if (!user) {
+    return null;
+  }
 
   return (
     <Card>

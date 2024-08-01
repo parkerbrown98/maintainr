@@ -20,10 +20,8 @@ import {
   FormLabel,
   FormMessage,
 } from "../ui/form";
-import { Input } from "../ui/input";
 import { useUser } from "@/lib/hooks/auth";
 import { toast } from "sonner";
-import { editUserName } from "@/lib/actions/user";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { FormError } from "../ui/form-error";
@@ -47,10 +45,6 @@ export function SettingsLanguageCard() {
   const router = useRouter();
   const { user } = useUser();
 
-  if (!user) {
-    return null;
-  }
-
   const form = useForm<FormValues>({
     resolver: zodResolver(schema),
     defaultValues: {
@@ -60,7 +54,6 @@ export function SettingsLanguageCard() {
 
   const handleSubmit = async (data: FormValues) => {
     try {
-      // await editUserName(data.firstName, data.lastName);
       toast.success("Your language has been updated.");
       router.refresh();
     } catch (err) {
@@ -70,6 +63,10 @@ export function SettingsLanguageCard() {
       }
     }
   };
+
+  if (!user) {
+    return null;
+  }
 
   return (
     <Card>

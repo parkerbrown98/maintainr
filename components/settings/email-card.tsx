@@ -41,14 +41,10 @@ export function SettingsEmailCard() {
   const router = useRouter();
   const { user } = useUser();
 
-  if (!user) {
-    return null;
-  }
-
   const form = useForm<FormValues>({
     resolver: zodResolver(schema),
     defaultValues: {
-      email: user.email,
+      email: user?.email,
       allowMarketing: false,
       allowProductUpdates: false,
     },
@@ -66,6 +62,10 @@ export function SettingsEmailCard() {
       }
     }
   };
+
+  if (!user) {
+    return null;
+  }
 
   return (
     <Card>

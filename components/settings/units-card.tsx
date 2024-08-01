@@ -47,16 +47,12 @@ export function SettingsUnitsCard() {
   const router = useRouter();
   const { user, preferences } = useUser();
 
-  if (!user || !preferences) {
-    return null;
-  }
-
   const form = useForm<FormValues>({
     resolver: zodResolver(schema),
     defaultValues: {
-      lengthUnits: preferences.lengthUnits,
-      volumeUnits: preferences.volumeUnits,
-      weightUnits: preferences.weightUnits,
+      lengthUnits: preferences?.lengthUnits ?? "imperial",
+      volumeUnits: preferences?.volumeUnits ?? "imperial",
+      weightUnits: preferences?.weightUnits ?? "imperial",
     },
   });
 
@@ -76,6 +72,10 @@ export function SettingsUnitsCard() {
       }
     }
   };
+
+  if (!user || !preferences) {
+    return null;
+  }
 
   return (
     <Card>

@@ -41,10 +41,6 @@ export default function VehicleSwitcher({ className }: VehicleSwitcherProps) {
     activeVehicle
   );
 
-  if (!vehicles) {
-    return null;
-  }
-
   useEffect(() => {
     setSelectedVehicle(activeVehicle);
   }, [activeVehicle]);
@@ -56,6 +52,10 @@ export default function VehicleSwitcher({ className }: VehicleSwitcherProps) {
     router.refresh();
     toast.success("Vehicle set as active");
   };
+
+  if (!vehicles) {
+    return null;
+  }
 
   return (
     <>

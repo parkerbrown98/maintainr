@@ -1,5 +1,7 @@
 "use server";
 
+import fs from "fs";
+import path from "path";
 import {
   ServiceRecord,
   ServiceRecordInsert,
@@ -140,6 +142,22 @@ export async function deleteServiceRecord(id: string) {
     .limit(1);
 
   if (!serviceRecord) return { error: "Service record not found" };
+
+  // Delete all uploads associated with this service record
+  const uploadsToDelete = await db
+    .select()
+    .from(uploads)
+    .where(eq(uploads.serviceRecordId, id));
+
+  for (const upload of uploadsToDelete) {
+    try {
+      fs.unlinkSync(path.join(process.cwd(), upload.url));
+    } catch (err) {
+      return { error: "Failed to delete file from filesystem" };
+    }
+
+    await db.delete(uploads).where(eq(uploads.id, upload.id));
+  }
 
   await db.delete(serviceRecords).where(eq(serviceRecords.id, id));
 

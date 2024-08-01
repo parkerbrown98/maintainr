@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "migrate": "npx drizzle-kit migrate"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.9.0",
@@ -29,6 +30,7 @@
     "cmdk": "0.2.1",
     "convert": "^5.3.0",
     "date-fns": "^3.6.0",
+    "drizzle-kit": "^0.23.1",
     "drizzle-orm": "^0.32.0",
     "lucia": "^3.2.0",
     "lucide-react": "^0.411.0",
@@ -50,7 +52,6 @@
     "@types/pg": "^8.11.6",
     "@types/react": "^18.3.3",
     "@types/react-dom": "^18.3.0",
-    "drizzle-kit": "^0.23.0",
     "eslint": "^8.57.0",
     "eslint-config-next": "14.2.5",
     "postcss": "^8.4.39",

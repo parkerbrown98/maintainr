@@ -69,14 +69,14 @@ export function UserDropdown() {
                 className="flex items-center gap-x-2"
               >
                 <Sun className="h-4 w-4" />
-                Light mode
+                Light
               </DropdownMenuItem>
               <DropdownMenuItem
                 onClick={() => setTheme("dark")}
                 className="flex items-center gap-x-2"
               >
                 <Moon className="h-4 w-4" />
-                Dark mode
+                Dark
               </DropdownMenuItem>
               <DropdownMenuItem
                 onClick={() => setTheme("system")}

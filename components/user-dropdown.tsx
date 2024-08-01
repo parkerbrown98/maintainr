@@ -1,6 +1,6 @@
 "use client";
 
-import { ChevronDown, Cog, LogOut, Moon, Sun } from "lucide-react";
+import { ChevronDown, Cog, Computer, LogOut, Moon, Sun } from "lucide-react";
 import { Avatar, AvatarFallback } from "./ui/avatar";
 import { Button } from "./ui/button";
 import {
@@ -10,6 +10,9 @@ import {
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuSeparator,
+  DropdownMenuSub,
+  DropdownMenuSubContent,
+  DropdownMenuSubTrigger,
   DropdownMenuTrigger,
 } from "./ui/dropdown-menu";
 import Link from "next/link";
@@ -21,7 +24,7 @@ import { useTheme } from "next-themes";
 export function UserDropdown() {
   const router = useRouter();
   const { user } = useUser();
-  const { setTheme, theme } = useTheme();
+  const { setTheme } = useTheme();
 
   const handleLogout = async () => {
     await logOut();
@@ -55,24 +58,35 @@ export function UserDropdown() {
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
         <DropdownMenuGroup>
-          {theme === "dark" && (
-            <DropdownMenuItem
-              onClick={() => setTheme("light")}
-              className="flex items-center gap-x-2"
-            >
+          <DropdownMenuSub>
+            <DropdownMenuSubTrigger className="flex items-center gap-x-2">
               <Sun className="h-4 w-4" />
-              Light mode
-            </DropdownMenuItem>
-          )}
-          {theme === "light" && (
-            <DropdownMenuItem
-              onClick={() => setTheme("dark")}
-              className="flex items-center gap-x-2"
-            >
-              <Moon className="h-4 w-4" />
-              Dark mode
-            </DropdownMenuItem>
-          )}
+              Theme
+            </DropdownMenuSubTrigger>
+            <DropdownMenuSubContent>
+              <DropdownMenuItem
+                onClick={() => setTheme("light")}
+                className="flex items-center gap-x-2"
+              >
+                <Sun className="h-4 w-4" />
+                Light mode
+              </DropdownMenuItem>
+              <DropdownMenuItem
+                onClick={() => setTheme("light")}
+                className="flex items-center gap-x-2"
+              >
+                <Moon className="h-4 w-4" />
+                Dark mode
+              </DropdownMenuItem>
+              <DropdownMenuItem
+                onClick={() => setTheme("system")}
+                className="flex items-center gap-x-2"
+              >
+                <Computer className="h-4 w-4" />
+                System
+              </DropdownMenuItem>
+            </DropdownMenuSubContent>
+          </DropdownMenuSub>
           <DropdownMenuItem asChild>
             <Link href="/settings" className="flex items-center gap-x-2">
               <Cog className="h-4 w-4" />

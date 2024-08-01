@@ -20,12 +20,35 @@ import { UnitFormat } from "../unit-format";
 import { UploadTiles } from "../upload-tiles";
 import { useState } from "react";
 import { DeleteServiceDialog } from "../dialogs/delete-service-record";
+import { NewUploadDialog } from "../dialogs/new-upload";
+import { Upload } from "lucide-react";
+import { toast } from "sonner";
+import { addServiceRecordUpload } from "@/lib/actions/services";
+import { useRouter } from "next/navigation";
 
 export function ViewServiceSheet() {
+  const router = useRouter();
+  const [uploadDialogOpen, setUploadDialogOpen] = useState(false);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const { open, setOpen } = useSheet();
   const vehicle = useVehicle();
   const { service, uploads } = useService();
+
+  const handleUpload = async (data: FormData) => {
+    if (!service || !vehicle) return;
+    data.append("serviceRecordId", service.id);
+    
+    try {
+      await addServiceRecordUpload(data);
+      toast.success("Upload added successfully");
+      setUploadDialogOpen(false);
+      router.refresh();
+    } catch (err) {
+      if (err instanceof Error) {
+        toast.error(err.message);
+      }
+    }
+  };
 
   if (!service || !vehicle) {
     return null;
@@ -35,6 +58,11 @@ export function ViewServiceSheet() {
 
     return (
       <>
+        <NewUploadDialog
+          open={uploadDialogOpen}
+          setOpen={setUploadDialogOpen}
+          onUpload={handleUpload}
+        />
         <DeleteServiceDialog
           open={deleteDialogOpen}
           setOpen={setDeleteDialogOpen}
@@ -125,6 +153,14 @@ export function ViewServiceSheet() {
                     No uploads have been attached to this service.
                   </div>
                 )}
+                <Button
+                  onClick={() => setUploadDialogOpen(true)}
+                  variant="outline"
+                  className="h-8"
+                >
+                  <Upload className="w-4 h-4 mr-2" />
+                  Add Upload
+                </Button>
               </div>
             </div>
             <SheetFooter>

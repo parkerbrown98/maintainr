@@ -22,6 +22,7 @@ import {
   Home,
   OctagonAlert,
   Settings,
+  Upload,
   Wrench,
 } from "lucide-react";
 import { useUserVehicle } from "@/lib/hooks/user-vehicle";
@@ -127,7 +128,7 @@ export default function Sidebar() {
                   <Wrench className="h-4 w-4" />
                   Service
                 </Link>
-                <Link
+                {/* <Link
                   href={`/vehicles/${activeVehicle.id}/parts`}
                   className={cn(
                     "flex items-center gap-3 rounded-lg px-3 py-2 transition-all hover:text-primary",
@@ -160,23 +161,23 @@ export default function Sidebar() {
                 >
                   <ArrowUp10 className="h-4 w-4" />
                   Odometer
-                </Link>
+                </Link> */}
                 <Link
-                  href={`/vehicles/${activeVehicle.id}/documents`}
+                  href={`/vehicles/${activeVehicle.id}/uploads`}
                   className={cn(
                     "flex items-center gap-3 rounded-lg px-3 py-2 transition-all hover:text-primary",
                     {
                       "text-primary bg-muted": pathname.startsWith(
-                        `/vehicles/${activeVehicle.id}/documents`
+                        `/vehicles/${activeVehicle.id}/uploads`
                       ),
                       "text-muted-foreground": !pathname.startsWith(
-                        `/vehicles/${activeVehicle.id}/documents`
+                        `/vehicles/${activeVehicle.id}/uploads`
                       ),
                     }
                   )}
                 >
-                  <Files className="h-4 w-4" />
-                  Documents
+                  <Upload className="h-4 w-4" />
+                  Uploads
                 </Link>
               </>
             )}

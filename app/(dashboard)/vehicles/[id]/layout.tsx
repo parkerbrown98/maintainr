@@ -9,9 +9,10 @@ import { UnitFormat } from "@/components/unit-format";
 import { VehicleDetailActions } from "@/components/vehicle-detail-actions";
 import { VehicleTabs } from "@/components/vehicle-tabs";
 import { odometerReadings, vehicles } from "@/drizzle/schema";
+import { validateUser } from "@/lib/auth";
 import { VehicleProvider } from "@/lib/context/vehicle";
 import { coalesce, db } from "@/lib/db";
-import { eq, max, sql } from "drizzle-orm";
+import { and, eq, max, sql } from "drizzle-orm";
 import { Check, GalleryVertical, Gauge, Pencil } from "lucide-react";
 import { notFound } from "next/navigation";
 
@@ -28,10 +29,15 @@ export default async function VehiclesLayout({ params, children }: Props) {
     return notFound();
   }
 
+  const user = await validateUser();
+  if (!user) {
+    return notFound();
+  }
+
   const [vehicle] = await db
     .select()
     .from(vehicles)
-    .where(eq(vehicles.id, vehicleId))
+    .where(and(eq(vehicles.id, vehicleId), eq(vehicles.userId, user.user.id)))
     .limit(1);
 
   if (!vehicle) {
@@ -74,7 +80,10 @@ export default async function VehiclesLayout({ params, children }: Props) {
               )}
               <p className="flex items-center gap-x-1.5 text-sm text-muted-foreground">
                 <Gauge className="h-4 w-4" />
-                <UnitFormat value={distanceResult?.distance ?? 0} unit="length" />
+                <UnitFormat
+                  value={distanceResult?.distance ?? 0}
+                  unit="length"
+                />
               </p>
               {vehicle.licensePlate && (
                 <p className="flex items-center gap-x-1.5 text-sm text-muted-foreground">

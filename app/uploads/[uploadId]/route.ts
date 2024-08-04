@@ -56,10 +56,11 @@ export async function GET(request: Request, context: any) {
     }
   }
 
-  sharpImage.webp({
-    quality: searchParams.has("q") ? parseInt(searchParams.get("q")!) : 75,
-  });
-  fileContent = await sharpImage.toBuffer();
+  fileContent = await sharpImage
+    .webp({
+      quality: searchParams.has("q") ? parseInt(searchParams.get("q")!) : 80,
+    })
+    .toBuffer();
 
   if (searchParams.has("download", "true")) {
     return new Response(fileContent, {

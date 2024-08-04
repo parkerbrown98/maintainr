@@ -39,6 +39,7 @@ export function DeleteUploadDialog({
       }
 
       setOpen(false);
+      toast.success("Upload was deleted successfully.");
       router.refresh();
     } catch (err) {
       if (err instanceof Error) {

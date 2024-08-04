@@ -126,3 +126,29 @@ export const uploads = pgTable("uploads", {
 
 export type Upload = typeof uploads.$inferSelect;
 export type UploadInsert = typeof uploads.$inferInsert;
+
+export const fuelTypes = pgTable("fuel_types", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  name: varchar("name", { length: 100 }).notNull().unique(),
+  createdAt: timestamp("created_at").notNull().defaultNow(),
+});
+
+export const fuelRecords = pgTable("fuel_records", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  vehicleId: uuid("vehicle_id")
+    .notNull()
+    .references(() => vehicles.id),
+  fuelType: uuid("fuel_type_id")
+    .notNull()
+    .references(() => fuelTypes.id),
+  amount: decimal("amount", { precision: 10, scale: 2 }).notNull(),
+  cost: decimal("cost", { precision: 10, scale: 2 }).notNull(),
+  costPerUnit: decimal("cost_per_unit", { precision: 10, scale: 2 }),
+  odometer: integer("odometer"),
+  description: text("description"),
+  recordedAt: timestamp("recorded_at").notNull(),
+  createdAt: timestamp("created_at").notNull().defaultNow(),
+});
+
+export type FuelRecord = typeof fuelRecords.$inferSelect;
+export type FuelRecordInsert = typeof fuelRecords.$inferInsert;

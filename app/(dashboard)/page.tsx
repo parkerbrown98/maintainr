@@ -8,15 +8,15 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { UnitFormat } from "@/components/unit-format";
-import { odometerReadings, vehicles } from "@/drizzle/schema";
+import { odometerReadings, serviceRecords, vehicles } from "@/drizzle/schema";
 import { validateUser } from "@/lib/auth";
-import { db } from "@/lib/db";
+import { coalesce, db } from "@/lib/db";
 import {
   getDistanceDrivenPerMonth,
   getReadingsWithDelta,
 } from "@/lib/queries/odometer";
-import { count, eq, max, desc } from "drizzle-orm";
-import { CarFront, Gauge, Ruler } from "lucide-react";
+import { count, eq, max, desc, sum, sql } from "drizzle-orm";
+import { CarFront, DollarSign, Gauge, Ruler } from "lucide-react";
 import moment from "moment";
 import Link from "next/link";
 import { notFound } from "next/navigation";
@@ -61,6 +61,14 @@ export default async function Home() {
 
   let readingsWithDelta = await getReadingsWithDelta(user.user.id);
 
+  const [moneySpent] = await db
+    .select({ total: coalesce(sum(serviceRecords.cost), sql`0`) })
+    .from(serviceRecords)
+    .leftJoin(vehicles, eq(serviceRecords.vehicleId, vehicles.id))
+    .where(eq(vehicles.userId, user.user.id));
+
+  const parsedMoneySpent = moneySpent ? parseFloat(moneySpent.total ?? "0") : 0;
+
   return (
     <div className="flex flex-col h-full gap-4 lg:gap-6">
       <h1 className="scroll-m-20 text-3xl font-extrabold tracking-tight lg:text-4xl">
@@ -91,7 +99,20 @@ export default async function Home() {
             </CardTitle>
           </CardHeader>
         </Card>
-        <Card className="border border-dashed border-border"></Card>
+        <Card>
+          <CardHeader>
+            <CardDescription className="flex items-center justify-between">
+              Money spent
+              <DollarSign className="w-4 h-4" />
+            </CardDescription>
+            <CardTitle className="text-2xl lg:text-3xl">
+              {parsedMoneySpent.toLocaleString("en-US", {
+                style: "currency",
+                currency: "USD",
+              })}
+            </CardTitle>
+          </CardHeader>
+        </Card>
         <Card className="border border-dashed border-border"></Card>
       </div>
       <div className="grid grid-cols-1 gap-4 lg:grid-cols-4 xl:grid-cols-8 items-start">

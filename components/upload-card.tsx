@@ -4,9 +4,14 @@ import { Upload } from "@/drizzle/schema";
 import convert from "convert";
 import Link from "next/link";
 import { Button } from "./ui/button";
-import { Download, Trash2 } from "lucide-react";
+import { Download, Trash2, UploadIcon } from "lucide-react";
 import { useState } from "react";
 import { DeleteUploadDialog } from "./dialogs/delete-upload";
+import { NewUploadDialog } from "./dialogs/new-upload";
+import { toast } from "sonner";
+import { useRouter } from "next/navigation";
+import { useVehicle } from "@/lib/hooks/vehicle";
+import { addVehicleUpload } from "@/lib/actions/vehicles";
 
 interface UploadCardProps {
   upload: Upload;
@@ -25,7 +30,7 @@ export function UploadCard({ upload }: UploadCardProps) {
       <div className="flex flex-col gap-2 group">
         <Link
           href={upload.url}
-          className="relative overflow-hidden w-full h-64 rounded-t-lg"
+          className="relative overflow-hidden w-full h-64 rounded-lg"
         >
           <img
             src={upload.url}
@@ -65,6 +70,49 @@ export function UploadCard({ upload }: UploadCardProps) {
           </div>
         </div>
       </div>
+    </>
+  );
+}
+
+export function UploadCardSkeleton() {
+  const vehicle = useVehicle();
+  const router = useRouter();
+  const [uploadDialogOpen, setUploadDialogOpen] = useState(false);
+
+  const handleUpload = async (form: FormData) => {
+    if (!vehicle) return;
+
+    setUploadDialogOpen(false);
+    toast("Starting upload...", { icon: <UploadIcon className="w-4 h-4" /> });
+
+    try {
+      form.set("vehicleId", vehicle.id);
+      await addVehicleUpload(form);
+      toast.success("Upload complete!");
+      router.refresh();
+    } catch (err) {
+      if (err instanceof Error) {
+        toast.error(err.message);
+      }
+    }
+  };
+
+  return (
+    <>
+      <NewUploadDialog
+        open={uploadDialogOpen}
+        setOpen={setUploadDialogOpen}
+        onUpload={handleUpload}
+      />
+      <Button
+        onClick={() => setUploadDialogOpen(true)}
+        className="bg-transparent hover:bg-transparent flex items-center justify-center w-full h-64 border group hover:border-muted-foreground border-dashed rounded-lg transition-colors"
+      >
+        <p className="flex flex-col items-center gap-y-1 text-border group-hover:text-muted-foreground font-medium transition-colors">
+          <UploadIcon className="w-6 h-6" />
+          Add New
+        </p>
+      </Button>
     </>
   );
 }

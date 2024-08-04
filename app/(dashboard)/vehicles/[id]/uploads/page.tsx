@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { UploadCard } from "@/components/upload-card";
+import { UploadCard, UploadCardSkeleton } from "@/components/upload-card";
 import { uploads } from "@/drizzle/schema";
 import { db } from "@/lib/db";
 import convert from "convert";
@@ -27,6 +27,7 @@ export default async function VehicleUploads({ params }: VehicleUploadsProps) {
         {uploadRows.map((upload) => (
           <UploadCard key={upload.id} upload={upload} />
         ))}
+        <UploadCardSkeleton />
       </div>
     </div>
   );

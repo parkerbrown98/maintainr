@@ -87,7 +87,12 @@ export function UploadCardSkeleton() {
 
     try {
       form.set("vehicleId", vehicle.id);
-      await addVehicleUpload(form);
+      const result = await addVehicleUpload(form);
+
+      if (result && result.error) {
+        throw new Error(result.error);
+      }
+
       toast.success("Upload complete!");
       router.refresh();
     } catch (err) {

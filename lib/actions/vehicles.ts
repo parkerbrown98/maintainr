@@ -2,6 +2,7 @@
 
 import {
   odometerReadings,
+  uploads,
   users,
   VehicleInsert,
   vehicles,
@@ -10,6 +11,7 @@ import { db } from "../db";
 import { validateUser } from "../auth";
 import { and, eq } from "drizzle-orm";
 import convert from "convert";
+import { saveFileToDisk } from "./uploads";
 
 export async function createVehicle(
   vehicle: VehicleInsert & { odometer: number }
@@ -72,6 +74,47 @@ export async function setActiveVehicle(vehicleId: string) {
     .update(users)
     .set({ selectedVehicleId: vehicleId })
     .where(eq(users.id, user.user.id));
+
+  return null;
+}
+
+export async function addVehicleUpload(formData: FormData) {
+  const user = await validateUser();
+  if (!user || !user.user || !user.preferences)
+    return { error: "User not found" };
+
+  if (!formData.has("vehicleId") || !formData.has("files"))
+    return { error: "Missing required fields" };
+
+  const vehicleId = formData.get("vehicleId") as string;
+  const files = formData.getAll("files") as File[];
+
+  const [vehicle] = await db
+    .select()
+    .from(vehicles)
+    .where(and(eq(vehicles.id, vehicleId), eq(vehicles.userId, user.user.id)))
+    .limit(1);
+
+  if (!vehicle) return { error: "Vehicle not found" };
+
+  for (const file of files) {
+    let fileName = file.name.replaceAll(" ", "_");
+
+    // Insert a random string to avoid overwriting files with the same name
+    const randomString = Math.random().toString(36).substring(7);
+    fileName = `${randomString}_${fileName}`;
+
+    const filePath = await saveFileToDisk(fileName, file);
+
+    await db.insert(uploads).values({
+      fileName,
+      vehicleId,
+      mimeType: file.type,
+      userId: user.user.id,
+      size: file.size,
+      url: filePath,
+    });
+  }
 
   return null;
 }

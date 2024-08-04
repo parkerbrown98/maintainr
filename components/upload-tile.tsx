@@ -21,6 +21,7 @@ import {
 } from "./ui/dropdown-menu";
 import { useState } from "react";
 import { DeleteUploadDialog } from "./dialogs/delete-upload";
+import Image from "next/image";
 
 interface UploadTileProps {
   upload: Upload;
@@ -38,10 +39,12 @@ export function UploadTile({ upload }: UploadTileProps) {
       />
       <div className="flex space-x-2 items-center bg-muted border border-border rounded-md p-2">
         {upload.mimeType.startsWith("image") && (
-          <img
+          <Image
             src={upload.url}
             alt={upload.fileName}
             className="w-10 h-10 aspect-square object-cover rounded-sm"
+            width={120}
+            height={120}
           />
         )}
         {upload.mimeType === "application/pdf" && (

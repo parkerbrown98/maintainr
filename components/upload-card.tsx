@@ -12,6 +12,7 @@ import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { useVehicle } from "@/lib/hooks/vehicle";
 import { addVehicleUpload } from "@/lib/actions/vehicles";
+import Image from "next/image";
 
 interface UploadCardProps {
   upload: Upload;
@@ -32,10 +33,12 @@ export function UploadCard({ upload }: UploadCardProps) {
           href={upload.url}
           className="relative overflow-hidden w-full h-64 rounded-lg"
         >
-          <img
+          <Image
             src={upload.url}
             alt={upload.fileName}
             className="object-cover absolute inset-0 w-full h-full"
+            sizes="(min-width: 640px) 25vw, 100vw"
+            fill
           />
         </Link>
         <div className="flex items-center justify-between flex-wrap gap-y-1 gap-x-2">
